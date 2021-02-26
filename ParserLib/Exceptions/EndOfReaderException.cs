@@ -6,5 +6,11 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-    public delegate IParseResult<T> Parser<T>(IReader Reader);
+	public class EndOfReaderException:ParseException
+	{
+		public EndOfReaderException() : base($"End of reader is reached")
+		{
+
+		}
+	}
 }

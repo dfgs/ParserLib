@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public interface IReader
+	public class UnexpectedCharException:ParseException	
 	{
-		bool EOF
+		public UnexpectedCharException(char Current) : base($"Unexpected char {Current}")
 		{
-			get;
+
 		}
-
-		char Peek();
-		char Pop();
-
 	}
 }

@@ -8,7 +8,11 @@ namespace ParserLib
 {
 	public interface IParseResult<T>
 	{
-		string Message
+		bool Success
+		{
+			get;
+		}
+		char Input
 		{
 			get;
 		}
@@ -16,5 +20,9 @@ namespace ParserLib
 		{
 			get;
 		}
+
+
 	}
+
+
 }

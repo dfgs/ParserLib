@@ -6,5 +6,11 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-    public delegate IParseResult<T> Parser<T>(IReader Reader);
+	public abstract class ParseException:Exception
+	{
+		public ParseException(string Message):base(Message)
+		{
+
+		}
+	}
 }

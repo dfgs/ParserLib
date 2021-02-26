@@ -8,33 +8,40 @@ namespace ParserLib
 {
 	public sealed class ParseResult<T> : IParseResult<T>
 	{
-		
-		public string Message
+		private bool success;
+		public bool Success
 		{
-			get;
-			private set;
+			get => success;
 		}
-
+		private char input;
+		public char Input
+		{
+			get => input;
+		}
+		private T value;
 		public T Value
 		{
-			get;
-			private set;
+			get => value;
 		}
 
-		private ParseResult(T Value,string Message)
+		private ParseResult(bool Result,char Input,T Value)
 		{
-			this.Value = Value;this.Message = Message;
+			this.success = Result;
+			this.input = Input;
+			this.value = Value;
 		}
-
-		public static ParseResult<T> Success(T Value)
+		
+		public static ParseResult<T> Succeded(char Input, T Value)
 		{
-			return new ParseResult<T>(Value, "Success");
+			if (Value == null) throw new ArgumentNullException(nameof(Value));
+			return new ParseResult<T>(true, Input,Value);
 		}
-		public static ParseResult<T> Failure(string Message)
+		public static ParseResult<T> Failed(char Input, T Value)
 		{
-			return new ParseResult<T>(default(T), Message);
+			//if (Value == null) throw new ArgumentNullException(nameof(Value));
+			return new ParseResult<T>(false, Input, Value);
 		}
-
+		
 
 	}
 }
