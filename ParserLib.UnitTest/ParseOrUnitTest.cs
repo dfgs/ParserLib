@@ -27,9 +27,9 @@ namespace ParserLib.UnitTest
 			b = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
 			parser = a.Or(b);
 
-			Assert.IsTrue(parser.TryParse("abc"));
-			Assert.IsTrue(parser.TryParse("abd"));
-			Assert.IsFalse(parser.TryParse("cbc"));
+			Assert.IsTrue(parser.TryParse("abc").IsSuccess);
+			Assert.IsTrue(parser.TryParse("abd").IsSuccess);
+			Assert.IsFalse(parser.TryParse("cbc").IsSuccess);
 		}
 
 		[TestMethod]
@@ -81,9 +81,9 @@ namespace ParserLib.UnitTest
 			reader = new Reader("abcabe");
 			parser = a.Or(b);
 
-			Assert.IsTrue(parser.TryParse(reader));
+			Assert.IsTrue(parser.TryParse(reader).IsSuccess);
 			Assert.AreEqual(3, reader.Position);
-			Assert.IsFalse(parser.TryParse(reader));
+			Assert.IsFalse(parser.TryParse(reader).IsSuccess);
 			Assert.AreEqual(3, reader.Position);
 		}
 

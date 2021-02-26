@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="Exceptions\EndOfReaderException.cs" />
     <Compile Include="Exceptions\UnexpectedCharException.cs" />
-    <Compile Include="IParseResult.cs" />
     <Compile Include="IReader.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="Exceptions\ParseException.cs" />

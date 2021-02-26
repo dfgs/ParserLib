@@ -22,13 +22,9 @@ namespace ParserLib
 			position = 0;
 		}
 
-		public char Peek()
-		{
-			if (EOF) throw new EndOfReaderException();
-			return value[position];
-		}
+	
 
-		public char Pop()
+		public char Read()
 		{
 			if (EOF) throw new EndOfReaderException();
 			return value[position++];

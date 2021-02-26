@@ -32,9 +32,9 @@ namespace ParserLib.UnitTest
 			b = Parse.Char('b').Then(Parse.Char('c'));
 			parser = a.Then(b);
 
-			Assert.IsTrue(parser.TryParse("abc"));
-			Assert.IsFalse(parser.TryParse("acb"));
-			Assert.IsFalse(parser.TryParse("cba"));
+			Assert.IsTrue(parser.TryParse("abc").IsSuccess);
+			Assert.IsFalse(parser.TryParse("acb").IsSuccess);
+			Assert.IsFalse(parser.TryParse("cba").IsSuccess);
 		}
 
 		[TestMethod]

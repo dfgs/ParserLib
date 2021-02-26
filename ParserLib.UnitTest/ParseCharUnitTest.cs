@@ -22,8 +22,8 @@ namespace ParserLib.UnitTest
 
 			parser = Parse.Char('a');
 
-			Assert.IsTrue(parser.TryParse("abc"));
-			Assert.IsFalse(parser.TryParse("bca"));
+			Assert.IsTrue(parser.TryParse("abc").IsSuccess);
+			Assert.IsFalse(parser.TryParse("bca").IsSuccess);
 		}
 
 		[TestMethod]
@@ -64,9 +64,9 @@ namespace ParserLib.UnitTest
 
 			parser = Parse.Char('a');
 			reader = new Reader("abcd");
-			Assert.IsTrue(parser.TryParse(reader));
+			Assert.IsTrue(parser.TryParse(reader).IsSuccess);
 			Assert.AreEqual(1, reader.Position);
-			Assert.IsFalse(parser.TryParse(reader));
+			Assert.IsFalse(parser.TryParse(reader).IsSuccess);
 			Assert.AreEqual(1, reader.Position);
 		}
 	}

@@ -28,52 +28,31 @@ namespace ParserLib.UnitTest
 			Assert.IsFalse(reader.EOF);
 		}
 
+		
 		[TestMethod]
-		public void ShouldPeek()
+		public void ShouldRead()
 		{
 			Reader reader;
 
 			reader = new Reader("abc");
-			Assert.AreEqual('a', reader.Peek());
-			Assert.AreEqual('a', reader.Peek());
-			Assert.AreEqual('a', reader.Peek());
-			Assert.IsFalse(reader.EOF);
-		}
-		[TestMethod]
-		public void ShouldPop()
-		{
-			Reader reader;
-
-			reader = new Reader("abc");
-			Assert.AreEqual('a', reader.Pop());
-			Assert.AreEqual('b', reader.Pop());
-			Assert.AreEqual('c', reader.Pop());
+			Assert.AreEqual('a', reader.Read());
+			Assert.AreEqual('b', reader.Read());
+			Assert.AreEqual('c', reader.Read());
 			Assert.IsTrue(reader.EOF);
 		}
 
+		
 		[TestMethod]
-		public void ShouldNotPeekWhenEOF()
+		public void ShouldNotReadWhenEOF()
 		{
 			Reader reader;
 
 			reader = new Reader("abc");
-			Assert.AreEqual('a', reader.Pop());
-			Assert.AreEqual('b', reader.Pop());
-			Assert.AreEqual('c', reader.Pop());
+			Assert.AreEqual('a', reader.Read());
+			Assert.AreEqual('b', reader.Read());
+			Assert.AreEqual('c', reader.Read());
 			Assert.IsTrue(reader.EOF);
-			Assert.ThrowsException<EndOfReaderException>(() => reader.Peek());
-		}
-		[TestMethod]
-		public void ShouldNotPopWhenEOF()
-		{
-			Reader reader;
-
-			reader = new Reader("abc");
-			Assert.AreEqual('a', reader.Pop());
-			Assert.AreEqual('b', reader.Pop());
-			Assert.AreEqual('c', reader.Pop());
-			Assert.IsTrue(reader.EOF);
-			Assert.ThrowsException<EndOfReaderException>(() => reader.Pop());
+			Assert.ThrowsException<EndOfReaderException>(() => reader.Read());
 		}
 
 		[TestMethod]
