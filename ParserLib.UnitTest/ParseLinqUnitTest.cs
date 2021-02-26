@@ -32,7 +32,7 @@ namespace ParserLib.UnitTest
 			//"aaa".SelectMany()
 
 			a = Parse.Char('a');
-			b = Parse.Char('b').Many();
+			b = Parse.Char('b').AtLeastOne();
 			//"adedaz".SelectMany();
 
 			Parser<string> parser =

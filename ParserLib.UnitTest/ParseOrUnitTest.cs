@@ -11,25 +11,25 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser,a,b;
 
-			a = Parse.Char('a');
-			b = Parse.Char('b');
+			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('d')) ;
+			b = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
 			parser = a.Or(b);
 
-			Assert.AreEqual("b", parser.Parse("b"));
-			Assert.AreEqual("a", parser.Parse("a"));
+			Assert.AreEqual("abc", parser.Parse("abc"));
+			Assert.AreEqual("abd", parser.Parse("abd"));
 		}
 		[TestMethod]
 		public void ShouldTryParse()
 		{
 			Parser<string> parser, a, b;
 
-			a = Parse.Char('a');
-			b = Parse.Char('b');
+			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('d'));
+			b = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
 			parser = a.Or(b);
 
-			Assert.IsTrue(parser.TryParse("b"));
-			Assert.IsTrue(parser.TryParse("a"));
-			Assert.IsFalse(parser.TryParse("c"));
+			Assert.IsTrue(parser.TryParse("abc"));
+			Assert.IsTrue(parser.TryParse("abd"));
+			Assert.IsFalse(parser.TryParse("cbc"));
 		}
 
 		[TestMethod]
@@ -67,6 +67,24 @@ namespace ParserLib.UnitTest
 
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse("c"));
 
+		}
+
+		[TestMethod]
+		public void ShouldSeekToPreviousPositionWhenTryParse()
+		{
+			Parser<string> parser,a,b;
+			Reader reader;
+
+
+			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('d'));
+			b = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+			reader = new Reader("abcabe");
+			parser = a.Or(b);
+
+			Assert.IsTrue(parser.TryParse(reader));
+			Assert.AreEqual(3, reader.Position);
+			Assert.IsFalse(parser.TryParse(reader));
+			Assert.AreEqual(3, reader.Position);
 		}
 
 	}

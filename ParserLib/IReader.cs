@@ -13,8 +13,14 @@ namespace ParserLib
 			get;
 		}
 
+		long Position
+		{
+			get;
+		}
+
 		char Peek();
 		char Pop();
 
+		void Seek(long Position);
 	}
 }

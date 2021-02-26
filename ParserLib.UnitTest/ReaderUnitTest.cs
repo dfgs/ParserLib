@@ -4,7 +4,7 @@ using System;
 namespace ParserLib.UnitTest
 {
 	[TestClass]
-	public class StringReaderUnitTest
+	public class ReaderUnitTest
 	{
 		[TestMethod]
 		public void ShouldCheckConstructorParameters()
@@ -75,6 +75,30 @@ namespace ParserLib.UnitTest
 			Assert.IsTrue(reader.EOF);
 			Assert.ThrowsException<EndOfReaderException>(() => reader.Pop());
 		}
+
+		[TestMethod]
+		public void ShouldSeek()
+		{
+			Reader reader;
+
+			reader = new Reader("abc");
+			reader.Seek(1);
+			Assert.AreEqual(1, reader.Position);
+			reader.Seek(2);
+			Assert.AreEqual(2, reader.Position);
+			reader.Seek(0);
+			Assert.AreEqual(0, reader.Position);
+		}
+		[TestMethod]
+		public void ShouldNotSeek()
+		{
+			Reader reader;
+
+			reader = new Reader("abc");
+			Assert.ThrowsException<EndOfReaderException>(() => reader.Seek(-1));
+			Assert.ThrowsException<EndOfReaderException>(() => reader.Seek(10));
+		}
+
 
 	}
 }

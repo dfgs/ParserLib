@@ -50,13 +50,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ParseAnyUnitTest.cs" />
-    <Compile Include="ParseManyUnitTest.cs" />
+    <Compile Include="ParseAtLeastOneUnitTest.cs" />
     <Compile Include="ParseLinqUnitTest.cs" />
     <Compile Include="ParseThenUnitTest.cs" />
     <Compile Include="ParseOrUnitTest.cs" />
     <Compile Include="ParserExtensionsUnitTest.cs" />
     <Compile Include="ParseResultUnitTest.cs" />
-    <Compile Include="StringReaderUnitTest.cs" />
+    <Compile Include="ReaderUnitTest.cs" />
     <Compile Include="ParseCharUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

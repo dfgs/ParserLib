@@ -7,27 +7,38 @@ namespace ParserLib
 	public class Reader : IReader
 	{
 		private char[] value;
-		private int index;
+		private long position;
+		public long Position
+		{
+			get => position;
+		}
 
-		public bool EOF => index >= value.Length;
+		public bool EOF => position >= value.Length;
 
 		public Reader(IEnumerable<char> Value)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
 			this.value = Value.ToArray();
-			index = 0;
+			position = 0;
 		}
 
 		public char Peek()
 		{
 			if (EOF) throw new EndOfReaderException();
-			return value[index];
+			return value[position];
 		}
 
 		public char Pop()
 		{
 			if (EOF) throw new EndOfReaderException();
-			return value[index++];
+			return value[position++];
 		}
+
+		public void Seek(long Position)
+		{
+			if ((Position<0) || (Position>=value.Length)) throw new EndOfReaderException();
+			this.position = Position;
+		}
+
 	}
 }

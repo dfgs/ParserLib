@@ -45,5 +45,21 @@ namespace ParserLib.UnitTest
 			Assert.ThrowsException<EndOfReaderException>(() => parser.TryParse(""));
 		}
 
+		[TestMethod]
+		public void ShouldSeekToPreviousPositionWhenTryParse()
+		{
+			Parser<string> parser;
+			Reader reader;
+
+
+			parser = Parse.Any();
+			reader = new Reader("abcd");
+			Assert.IsTrue(parser.TryParse(reader));
+			Assert.AreEqual(1, reader.Position);
+			Assert.IsTrue(parser.TryParse(reader));
+			Assert.AreEqual(2, reader.Position);
+		}
+
+
 	}
 }

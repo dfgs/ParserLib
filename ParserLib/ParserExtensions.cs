@@ -109,11 +109,15 @@ namespace ParserLib
 			return (reader) =>
 			{
 				IParseResult<T> result;
+				long currentPosition;
 
+				currentPosition = reader.Position;
 				result = A(reader);
 				if (result.Success) return result;
+				reader.Seek(currentPosition);
 				result = B(reader);
 				if (result.Success) return result;
+				reader.Seek(currentPosition);
 
 				return result;
 			};
@@ -129,18 +133,29 @@ namespace ParserLib
 			{
 				IParseResult<string> result1;
 				IParseResult<string> result2;
+				long position;
+
+				position = reader.Position;
 
 				result1 = A(reader);
-				if (!result1.Success) return ParseResult<string>.Failed(result1.Input, null);
+				if (!result1.Success)
+				{
+					reader.Seek(position);
+					return ParseResult<string>.Failed(result1.Input, null);
+				}
 				result2 = B(reader);
-				if (!result2.Success) return ParseResult<string>.Failed(result2.Input, null);
+				if (!result2.Success)
+				{
+					reader.Seek(position);
+					return ParseResult<string>.Failed(result2.Input, null);
+				}
 
 				return ParseResult<string>.Succeded(result1.Input, result1.Value + result2.Value);
 			};
 		}
 
 	
-		public static Parser<string> Many(this Parser<string> Parser)
+		public static Parser<string> AtLeastOne(this Parser<string> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			return (reader) =>
@@ -153,12 +168,12 @@ namespace ParserLib
 
 				items = new List<string>();
 				items.Add(result.Value);
-				do
+				while (!reader.EOF)
 				{
 					result = Parser(reader);
 					if (!result.Success) break;
 					items.Add(result.Value);
-				} while (!reader.EOF);
+				} 
 
 				return ParseResult<string>.Succeded(result.Input,string.Join("",items) );
 			};
