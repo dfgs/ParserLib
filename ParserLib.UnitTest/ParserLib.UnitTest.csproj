@@ -49,7 +49,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ParseDigitUnitTest.cs" />
+    <Compile Include="ParseExceptUnitTest.cs" />
     <Compile Include="ParseAnyUnitTest.cs" />
+    <Compile Include="ParseAnyOfUnitTest.cs" />
+    <Compile Include="ParseZeroOrOneTimeUnitTest.cs" />
     <Compile Include="ParseZeroOrMoreTimesUnitTest.cs" />
     <Compile Include="ParseOneOrMoreTimesUnitTest.cs" />
     <Compile Include="ParseLinqUnitTest.cs" />
