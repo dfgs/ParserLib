@@ -9,7 +9,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldCheckConstructorParameters()
 		{
-			Assert.ThrowsException<ArgumentNullException>(() => ParseResult<string>.Succeded('a', null));
+			Assert.ThrowsException<ArgumentNullException>(() => ParseResult<string>.Succeded( null));
 		}
 		/*[TestMethod]
 		public void ShouldPopReaderWhenSuccess()

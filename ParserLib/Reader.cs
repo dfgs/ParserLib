@@ -26,13 +26,13 @@ namespace ParserLib
 
 		public char Read()
 		{
-			if (EOF) throw new EndOfReaderException();
+			if (EOF) throw new IndexOutOfRangeException();
 			return value[position++];
 		}
 
 		public void Seek(long Position)
 		{
-			if ((Position<0) || (Position>=value.Length)) throw new EndOfReaderException();
+			if ((Position<0) || (Position>value.Length)) throw new IndexOutOfRangeException();
 			this.position = Position;
 		}
 

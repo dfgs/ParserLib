@@ -52,7 +52,7 @@ namespace ParserLib.UnitTest
 			Assert.AreEqual('b', reader.Read());
 			Assert.AreEqual('c', reader.Read());
 			Assert.IsTrue(reader.EOF);
-			Assert.ThrowsException<EndOfReaderException>(() => reader.Read());
+			Assert.ThrowsException<IndexOutOfRangeException>(() => reader.Read());
 		}
 
 		[TestMethod]
@@ -63,10 +63,16 @@ namespace ParserLib.UnitTest
 			reader = new Reader("abc");
 			reader.Seek(1);
 			Assert.AreEqual(1, reader.Position);
+			Assert.IsFalse(reader.EOF);
 			reader.Seek(2);
 			Assert.AreEqual(2, reader.Position);
+			Assert.IsFalse(reader.EOF);
 			reader.Seek(0);
 			Assert.AreEqual(0, reader.Position);
+			Assert.IsFalse(reader.EOF);
+			reader.Seek(3);
+			Assert.AreEqual(3, reader.Position);
+			Assert.IsTrue(reader.EOF);
 		}
 		[TestMethod]
 		public void ShouldNotSeek()
@@ -74,8 +80,8 @@ namespace ParserLib.UnitTest
 			Reader reader;
 
 			reader = new Reader("abc");
-			Assert.ThrowsException<EndOfReaderException>(() => reader.Seek(-1));
-			Assert.ThrowsException<EndOfReaderException>(() => reader.Seek(10));
+			Assert.ThrowsException<IndexOutOfRangeException>(() => reader.Seek(-1));
+			Assert.ThrowsException<IndexOutOfRangeException>(() => reader.Seek(10));
 		}
 
 

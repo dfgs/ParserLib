@@ -11,84 +11,101 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			Parser<string> a;
 			Parser<string> parser;
+			Reader reader;
 
-			a = Parse.Char('a');
-			parser = a.AtLeastOne();
+			reader = new Reader("abc");
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
 
-			Assert.AreEqual("a", parser.Parse("a"));
-			Assert.AreEqual("a", parser.Parse("ab"));
-			Assert.AreEqual("aa", parser.Parse("aab"));
-			Assert.AreEqual("aaa", parser.Parse("aaab"));
+			Assert.AreEqual("abc", parser.Parse(reader));
+			Assert.AreEqual(3, reader.Position);
+
+			reader = new Reader("abcabc");
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+
+			Assert.AreEqual("abcabc", parser.Parse(reader));
+			Assert.AreEqual(6, reader.Position);
 		}
 		[TestMethod]
-		public void ShouldTryParse()
+		public void ShouldNotParse()
 		{
-			Parser<string> a;
 			Parser<string> parser;
+			Reader reader;
 
-			a = Parse.Char('a');
-			parser = a.AtLeastOne();
+			reader = new Reader("abd");
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
 
-			Assert.IsTrue(parser.TryParse("a").IsSuccess);
-			Assert.IsTrue(parser.TryParse("aa").IsSuccess);
-			Assert.IsTrue(parser.TryParse("aaa").IsSuccess);
+			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
+			Assert.AreEqual(0, reader.Position);
 		}
 
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			Parser<string> a;
 			Parser<string> parser;
+			Reader reader;
 
-			a = Parse.Char('a');
-			parser = a.AtLeastOne();
+			reader = new Reader("aab"); reader.Seek(1);
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
 
-			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(""));
+			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
+			Assert.AreEqual(1, reader.Position);
 		}
+
+
+		[TestMethod]
+		public void ShouldTryParse()
+		{
+			Parser<string> parser;
+			Reader reader;
+			ParseResult<string> result;
+
+			reader = new Reader("abc");
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			result = parser.TryParse(reader);
+			Assert.IsTrue(result.IsSuccess);
+			Assert.AreEqual("abc", result.Value);
+			Assert.AreEqual(3, reader.Position);
+
+			reader = new Reader("abcabc");
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			result = parser.TryParse(reader);
+			Assert.IsTrue(result.IsSuccess);
+			Assert.AreEqual("abcabc", result.Value);
+			Assert.AreEqual(6, reader.Position);
+
+		}
+
+		[TestMethod]
+		public void ShouldNotTryParse()
+		{
+			Parser<string> parser;
+			Reader reader;
+			ParseResult<string> result;
+
+			reader = new Reader("abd");
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			result = parser.TryParse(reader);
+			Assert.IsFalse(result.IsSuccess);
+			Assert.AreEqual(null, result.Value);
+			Assert.AreEqual(0, reader.Position);
+		}
+
 
 		[TestMethod]
 		public void ShouldNotTryParseWhenEOF()
 		{
-			Parser<string> a;
-			Parser<string> parser;
-
-			a = Parse.Char('a');
-			parser = a.AtLeastOne();
-
-			Assert.ThrowsException<EndOfReaderException>(() => parser.TryParse(""));
-		}
-
-		[TestMethod]
-		public void ShouldNotParse()
-		{
-			Parser<string> a;
-			Parser<string> parser;
-
-			a = Parse.Char('a');
-			parser = a.AtLeastOne();
-
-			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse("c"));
-		}
-
-		[TestMethod]
-		public void ShouldSeekToPreviousPositionWhenTryParse()
-		{
 			Parser<string> parser;
 			Reader reader;
+			ParseResult<string> result;
 
-
+			reader = new Reader("aa"); reader.Seek(1);
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
-			reader = new Reader("abcabcabd");
-			Assert.IsTrue(parser.TryParse(reader).IsSuccess);
-			Assert.AreEqual(6, reader.Position);
-			Assert.IsFalse(parser.TryParse(reader).IsSuccess);
-			Assert.AreEqual(6, reader.Position);
 
-			reader = new Reader("abd");
-			Assert.IsFalse(parser.TryParse(reader).IsSuccess);
-			Assert.AreEqual(0, reader.Position);
+			result = parser.TryParse(reader);
+			Assert.IsFalse(result.IsSuccess);
+			Assert.AreEqual(null, result.Value);
+			Assert.AreEqual(1, reader.Position);
 		}
 
 

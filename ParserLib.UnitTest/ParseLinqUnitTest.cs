@@ -13,8 +13,6 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> a;
 
-
-
 			a = Parse.Char('a');
 
 			Parser<string> parser =

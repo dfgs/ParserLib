@@ -10,55 +10,64 @@ namespace ParserLib.UnitTest
 		public void ShouldParse()
 		{
 			Parser<string> parser;
+			Reader reader;
 
+			reader = new Reader("abc");
 			parser = Parse.Any();
 
-			Assert.AreEqual("a", parser.Parse("abc"));
+			Assert.AreEqual("a", parser.Parse(reader));
+			Assert.AreEqual(1, reader.Position);
 		}
-		[TestMethod]
-		public void ShouldTryParse()
-		{
-			Parser<string> parser;
-
-			parser = Parse.Any();
-
-			Assert.IsTrue(parser.TryParse("abc").IsSuccess);
-			Assert.IsTrue(parser.TryParse("bca").IsSuccess);
-		}
+		
 
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
 			Parser<string> parser;
+			Reader reader;
 
+			reader = new Reader("a"); reader.Seek(1);
 			parser = Parse.Any();
 
-			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(""));
+			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
+			Assert.AreEqual(1, reader.Position);
 		}
+
+
+		[TestMethod]
+		public void ShouldTryParse()
+		{
+			Parser<string> parser;
+			Reader reader;
+			ParseResult<string> result;
+
+			reader = new Reader("abc");
+			parser = Parse.Any();
+			result = parser.TryParse(reader);
+			Assert.IsTrue(result.IsSuccess);
+			Assert.AreEqual("a", result.Value);
+			Assert.AreEqual(1, reader.Position);
+		}
+
+
+
+
 		[TestMethod]
 		public void ShouldNotTryParseWhenEOF()
 		{
 			Parser<string> parser;
-
-			parser = Parse.Any();
-
-			Assert.ThrowsException<EndOfReaderException>(() => parser.TryParse(""));
-		}
-
-		[TestMethod]
-		public void ShouldSeekToPreviousPositionWhenTryParse()
-		{
-			Parser<string> parser;
 			Reader reader;
+			ParseResult<string> result;
 
-
+			reader = new Reader("a"); reader.Seek(1);
 			parser = Parse.Any();
-			reader = new Reader("abcd");
-			Assert.IsTrue(parser.TryParse(reader).IsSuccess);
+
+			result = parser.TryParse(reader);
+			Assert.IsFalse(result.IsSuccess);
+			Assert.AreEqual(null, result.Value);
 			Assert.AreEqual(1, reader.Position);
-			Assert.IsTrue(parser.TryParse(reader).IsSuccess);
-			Assert.AreEqual(2, reader.Position);
 		}
+
 
 
 	}

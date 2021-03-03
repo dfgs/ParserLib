@@ -15,8 +15,8 @@ namespace ParserLib
 			{
 				ParseResult<T> result;
 				result=Parser.TryParse(reader);
-				if (result.IsSuccess) return ParseResult<U>.Succeded(result.Input, Selector(result.Value));
-				return ParseResult<U>.Failed(result.Input);
+				if (result.IsSuccess) return ParseResult<U>.Succeded(Selector(result.Value));
+				return ParseResult<U>.Failed(result);
 			};
 			return new Parser<U>(parserDelegate);
 		}
@@ -47,7 +47,7 @@ namespace ParserLib
 			if (result.IsSuccess)
 				return next(result);
 
-			return ParseResult<U>.Failed(result.Input);
+			return ParseResult<U>.Failed(result);
 		}
 
 		

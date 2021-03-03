@@ -34,7 +34,7 @@ namespace ParserLib
 			result = parserDelegate(Reader);
 			if (result.IsSuccess) return result.Value;
 			Reader.Seek(position);
-			throw new UnexpectedCharException(result.Input);
+			throw result.Exception;
 		}
 		public ParseResult<T> TryParse(string Value)
 		{

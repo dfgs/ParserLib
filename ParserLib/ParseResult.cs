@@ -13,35 +13,46 @@ namespace ParserLib
 		{
 			get => isSuccess;
 		}
-		private char input;
-		public char Input
-		{
-			get => input;
-		}
+		
 		private T value;
 		public T Value
 		{
 			get => value;
 		}
 
-		private ParseResult(bool IsSuccess,char Input,T Value)
+		private Exception exception;
+		public Exception Exception
+		{
+			get => exception;
+		}
+		private ParseResult(bool IsSuccess,T Value, Exception Exception)
 		{
 			this.isSuccess = IsSuccess;
-			this.input = Input;
 			this.value = Value;
+			this.exception = Exception;
 		}
+
 		
-		public static ParseResult<T> Succeded(char Input, T Value)
+
+				
+		public static ParseResult<T> Succeded( T Value)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
-			return new ParseResult<T>(true, Input,Value);
+			return new ParseResult<T>(true, Value,null);
 		}
 		public static ParseResult<T> Failed(char Input)
 		{
-			//if (Value == null) throw new ArgumentNullException(nameof(Value));
-			return new ParseResult<T>(false, Input, default(T));
+			return new ParseResult<T>(false, default(T), new UnexpectedCharException(Input));
 		}
-		
+		public static ParseResult<T> Failed<U>(ParseResult<U> Model)
+		{
+			return new ParseResult<T>(Model.IsSuccess, default(T), Model.Exception);
+		}
+		public static ParseResult<T> EndOfReader()
+		{
+			return new ParseResult<T>(false, default(T), new EndOfReaderException());
+		}
+
 
 	}
 }
