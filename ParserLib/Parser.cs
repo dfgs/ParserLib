@@ -34,7 +34,7 @@ namespace ParserLib
 			result = parserDelegate(Reader);
 			if (result.IsSuccess) return result.Value;
 			Reader.Seek(position);
-			throw result.Exception;
+			throw ((FailedParseResult<T>)result).Exception;
 		}
 		public ParseResult<T> TryParse(string Value)
 		{

@@ -15,8 +15,17 @@ namespace ParserLib
 			{
 				ParseResult<T> result;
 				result=Parser.TryParse(reader);
-				if (result.IsSuccess) return ParseResult<U>.Succeded(Selector(result.Value));
-				return ParseResult<U>.Failed(result);
+				switch(result)
+				{
+					case SucceededParseResult<T> succeeded:
+						return ParseResult<U>.Succeeded(Selector(result.Value));
+					case UnexpectedCharParseResult<T> failed:
+						return ParseResult<U>.Failed(failed.Input);
+					case EndOfReaderParseResult<T> endOfReader:
+						return ParseResult<U>.EndOfReader();
+					default:throw new NotSupportedException($"Parse result of type {result.GetType().Name} is not supported");
+				}
+				
 			};
 			return new Parser<U>(parserDelegate);
 		}
@@ -37,17 +46,25 @@ namespace ParserLib
 			if (first == null) throw new ArgumentNullException(nameof(first));
 			if (second == null) throw new ArgumentNullException(nameof(second));
 
-			ParserDelegate<U> parserDelegate = (reader) => first.TryParse(reader).IfSuccess(parseResult => second(parseResult.Value).TryParse(reader));
+			ParserDelegate<U> parserDelegate = (reader) => first.TryParse(reader).IfSuccess<T,U>(parseResult => second((parseResult).Value).TryParse(reader));
 			return new Parser<U>(parserDelegate);
 		}
 		public static ParseResult<U> IfSuccess<T, U>(this ParseResult<T> result, Func<ParseResult<T>, ParseResult<U>> next)
 		{
 			if (result == null) throw new ArgumentNullException(nameof(result));
 
-			if (result.IsSuccess)
-				return next(result);
 
-			return ParseResult<U>.Failed(result);
+			switch (result)
+			{
+				case SucceededParseResult<T> succeeded:
+					return next(result);
+				case UnexpectedCharParseResult<T> failed:
+					return ParseResult<U>.Failed(failed.Input);
+				case EndOfReaderParseResult<T> endOfReader:
+					return ParseResult<U>.EndOfReader();
+				default: throw new NotSupportedException($"Parse result of type {result.GetType().Name} is not supported");
+			}
+
 		}
 
 		

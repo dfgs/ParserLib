@@ -9,7 +9,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldCheckConstructorParameters()
 		{
-			Assert.ThrowsException<ArgumentNullException>(() => ParseResult<string>.Succeded( null));
+			Assert.ThrowsException<ArgumentNullException>(() => ParseResult<string>.Succeeded( null));
 		}
 		/*[TestMethod]
 		public void ShouldPopReaderWhenSuccess()
@@ -19,7 +19,7 @@ namespace ParserLib.UnitTest
 
 			reader = new Reader("a");
 			Assert.IsFalse(reader.EOF);
-			result=ParseResult<char>.Succeded(reader);
+			result=ParseResult<char>.Succeeded(reader);
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual('a', result.Value);
 			Assert.IsTrue(reader.EOF);

@@ -50,7 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ParseAnyUnitTest.cs" />
-    <Compile Include="ParseAtLeastOneUnitTest.cs" />
+    <Compile Include="ParseZeroOrMoreTimesUnitTest.cs" />
+    <Compile Include="ParseOneOrMoreTimesUnitTest.cs" />
     <Compile Include="ParseLinqUnitTest.cs" />
     <Compile Include="ParseThenUnitTest.cs" />
     <Compile Include="ParseOrUnitTest.cs" />

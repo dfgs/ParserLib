@@ -15,7 +15,7 @@ namespace ParserLib
 				char input;
 				if (reader.EOF) return ParseResult<string>.EndOfReader();
 				input = reader.Read();
-				if (input == Value) return ParseResult<string>.Succeded(input.ToString());
+				if (input == Value) return ParseResult<string>.Succeeded(input.ToString());
 				else return ParseResult<string>.Failed(input);
 			};
 			return new Parser<string>(parserDelegate);
@@ -26,7 +26,7 @@ namespace ParserLib
 				char input;
 				if (reader.EOF) return ParseResult<string>.EndOfReader();
 				input = reader.Read();
-				return ParseResult<string>.Succeded( input.ToString());
+				return ParseResult<string>.Succeeded( input.ToString());
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -62,12 +62,12 @@ namespace ParserLib
 				result2 = B.TryParse(reader);
 				if (!result2.IsSuccess) return result2;
 
-				return ParseResult<string>.Succeded(result1.Value + result2.Value);
+				return ParseResult<string>.Succeeded(result1.Value + result2.Value);
 			};
 			return new Parser<string>(parserDelegate);
 		}
 
-		public static Parser<string> AtLeastOne(this Parser<string> Parser)
+		public static Parser<string> OneOrMoreTimes(this Parser<string> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<string> parserDelegate = (reader) =>
@@ -87,11 +87,57 @@ namespace ParserLib
 					items.Add(result.Value);
 				}
 
-				return ParseResult<string>.Succeded(string.Join("", items));
+				return ParseResult<string>.Succeeded(string.Join("", items));
 			};
 			return new Parser<string>(parserDelegate);
 
 		}
+		public static Parser<string> ZeroOrMoreTimes(this Parser<string> Parser)
+		{
+			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
+			ParserDelegate<string> parserDelegate = (reader) =>
+			{
+				ParseResult<string> result;
+				List<string> items;
+
+				result = Parser.TryParse(reader);
+				if (!result.IsSuccess)
+				{
+					//if (result.)
+					return ParseResult<string>.Succeeded("");
+				};
+
+				items = new List<string>();
+				items.Add(result.Value);
+				while (!reader.EOF)
+				{
+					result = Parser.TryParse(reader);
+					if (!result.IsSuccess) break;
+					items.Add(result.Value);
+				}
+
+				return ParseResult<string>.Succeeded(string.Join("", items));
+			};
+			return new Parser<string>(parserDelegate);
+
+		}
+		public static Parser<string> ZeroOrOneTime(this Parser<string> Parser)
+		{
+			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
+			ParserDelegate<string> parserDelegate = (reader) =>
+			{
+				ParseResult<string> result;
+
+				result = Parser.TryParse(reader);
+				if (result.IsSuccess) return result;
+
+				return ParseResult<string>.Succeeded("");
+			};
+			return new Parser<string>(parserDelegate);
+
+		}
+
+
 
 	}
 }

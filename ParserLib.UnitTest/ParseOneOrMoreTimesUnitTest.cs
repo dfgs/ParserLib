@@ -6,7 +6,7 @@ using System.Linq;
 namespace ParserLib.UnitTest
 {
 	[TestClass]
-	public class ParseAtLeastOneUnitTest
+	public class ParseOneOrMoreTimesUnitTest
 	{
 		[TestMethod]
 		public void ShouldParse()
@@ -15,13 +15,13 @@ namespace ParserLib.UnitTest
 			Reader reader;
 
 			reader = new Reader("abc");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 
 			Assert.AreEqual("abc", parser.Parse(reader));
 			Assert.AreEqual(3, reader.Position);
 
 			reader = new Reader("abcabc");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 
 			Assert.AreEqual("abcabc", parser.Parse(reader));
 			Assert.AreEqual(6, reader.Position);
@@ -33,7 +33,7 @@ namespace ParserLib.UnitTest
 			Reader reader;
 
 			reader = new Reader("abd");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
@@ -45,11 +45,11 @@ namespace ParserLib.UnitTest
 			Parser<string> parser;
 			Reader reader;
 
-			reader = new Reader("aab"); reader.Seek(1);
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			reader = new Reader("ab"); 
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 
 			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
-			Assert.AreEqual(1, reader.Position);
+			Assert.AreEqual(0, reader.Position);
 		}
 
 
@@ -61,14 +61,14 @@ namespace ParserLib.UnitTest
 			ParseResult<string> result;
 
 			reader = new Reader("abc");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual("abc", result.Value);
 			Assert.AreEqual(3, reader.Position);
 
 			reader = new Reader("abcabc");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual("abcabc", result.Value);
@@ -84,7 +84,7 @@ namespace ParserLib.UnitTest
 			ParseResult<string> result;
 
 			reader = new Reader("abd");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result.IsSuccess);
 			Assert.AreEqual(null, result.Value);
@@ -99,13 +99,13 @@ namespace ParserLib.UnitTest
 			Reader reader;
 			ParseResult<string> result;
 
-			reader = new Reader("aa"); reader.Seek(1);
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).AtLeastOne();
+			reader = new Reader("ab"); 
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result.IsSuccess);
 			Assert.AreEqual(null, result.Value);
-			Assert.AreEqual(1, reader.Position);
+			Assert.AreEqual(0, reader.Position);
 		}
 
 
