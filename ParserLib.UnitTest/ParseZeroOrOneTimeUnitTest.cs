@@ -37,11 +37,15 @@ namespace ParserLib.UnitTest
 			Parser<string> parser;
 			Reader reader;
 
-			reader = new Reader("ab");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 
+			reader = new Reader("ab");
 			Assert.AreEqual("", parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
+			
+			reader = new Reader("a");reader.Seek(1);
+			Assert.AreEqual("", parser.Parse(reader));
+			Assert.AreEqual(1, reader.Position);
 		}
 
 
@@ -84,15 +88,22 @@ namespace ParserLib.UnitTest
 			Reader reader;
 			ParseResult<string> result;
 
-			reader = new Reader("ab"); 
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 
+			reader = new Reader("ab");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual("", result.Value);
 			Assert.AreEqual(0, reader.Position);
+
+			reader = new Reader("a"); reader.Seek(1);
+			result = parser.TryParse(reader);
+			Assert.IsTrue(result.IsSuccess);
+			Assert.AreEqual("", result.Value);
+			Assert.AreEqual(1, reader.Position);
 		}
 
+		
 
 	}
 }

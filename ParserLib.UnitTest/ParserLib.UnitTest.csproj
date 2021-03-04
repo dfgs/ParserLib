@@ -49,6 +49,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ParseAnyInRangeUnitTest.cs" />
+    <Compile Include="ParseByteUnitTest.cs" />
     <Compile Include="ParseDigitUnitTest.cs" />
     <Compile Include="ParseExceptUnitTest.cs" />
     <Compile Include="ParseAnyUnitTest.cs" />

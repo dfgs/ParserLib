@@ -42,7 +42,17 @@ namespace ParserLib
 			};
 			return new Parser<string>(parserDelegate);
 		}
-
+		public static Parser<string> AnyInRange(char First,char Last)
+		{
+			ParserDelegate<string> parserDelegate = (reader) => {
+				char input;
+				if (reader.EOF) return ParseResult<string>.EndOfReader();
+				input = reader.Read();
+				if ((input>=First) && (input <= Last)) return ParseResult<string>.Succeeded(input.ToString());
+				else return ParseResult<string>.Failed(input);
+			};
+			return new Parser<string>(parserDelegate);
+		}
 		public static Parser<string> Except(params char[] Values)
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
@@ -80,6 +90,20 @@ namespace ParserLib
 			};
 			return new Parser<byte>(parserDelegate);
 		}
+		public static Parser<byte> Byte()
+		{
+			// byte = 25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?
+			Parser<string> a, b, c,d,e;
+
+			a = Parse.Char('2').Then(Parse.Char('5')).Then(Parse.AnyInRange('0', '5'));
+			b = Parse.Char('2').Then(Parse.AnyInRange('0', '4')).Then(Parse.AnyInRange('0', '9'));
+			c = Parse.Char('1').Then(Parse.AnyInRange('0', '9')).Then(Parse.AnyInRange('0', '9'));
+			d = Parse.AnyInRange('1', '9').Then(Parse.AnyInRange('0', '9').ZeroOrOneTime());
+			e = Parse.Char('0');
+			return from value in a.Or(b).Or(c).Or(d).Or(e)
+				   select Convert.ToByte(value);
+		}
+		
 
 		public static Parser<T> Or<T>(this Parser<T> A, Parser<T> B)
 		{
