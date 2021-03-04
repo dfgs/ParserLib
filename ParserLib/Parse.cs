@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -92,7 +93,7 @@ namespace ParserLib
 		}
 		public static Parser<byte> Byte()
 		{
-			// byte = 25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?
+			
 			Parser<string> a, b, c,d,e;
 
 			a = Parse.Char('2').Then(Parse.Char('5')).Then(Parse.AnyInRange('0', '5'));
@@ -103,7 +104,20 @@ namespace ParserLib
 			return from value in a.Or(b).Or(c).Or(d).Or(e)
 				   select Convert.ToByte(value);
 		}
-		
+		public static Parser<IPAddress> IPAddress()
+		{
+
+			return
+				from A in Parse.Byte()
+				from _1 in Parse.Char('.')
+				from B in Parse.Byte()
+				from _2 in Parse.Char('.')
+				from C in Parse.Byte()
+				from _3 in Parse.Char('.')
+				from D in Parse.Byte()
+
+				select new IPAddress(new byte[] {A,B,C,D });
+		}
 
 		public static Parser<T> Or<T>(this Parser<T> A, Parser<T> B)
 		{
