@@ -91,6 +91,8 @@ namespace ParserLib.UnitTest
 			Assert.IsFalse(result.IsSuccess);
 			Assert.AreEqual(null, result.Value);
 			Assert.AreEqual(1, reader.Position); 
+
+			
 		}
 		
 
