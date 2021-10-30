@@ -16,7 +16,7 @@ namespace ParserLib.UnitTest
 
 			reader = new Reader("adc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrMoreTimes();
-			Assert.AreEqual("", parser.Parse(reader));
+			Assert.AreEqual(null, parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
 
 			reader = new Reader("abc");
@@ -29,7 +29,12 @@ namespace ParserLib.UnitTest
 			Assert.AreEqual("abcabc", parser.Parse(reader));
 			Assert.AreEqual(6, reader.Position);
 		}
-		
+
+		[TestMethod]
+		public void ShouldNotParseIfFuncIsNull()
+		{
+			Assert.ThrowsException<ArgumentNullException>(() => Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrMoreTimes(null));
+		}
 
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
@@ -40,7 +45,7 @@ namespace ParserLib.UnitTest
 			reader = new Reader("ab");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrMoreTimes();
 
-			Assert.AreEqual("", parser.Parse(reader));
+			Assert.AreEqual(null, parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -56,7 +61,7 @@ namespace ParserLib.UnitTest
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrMoreTimes();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
-			Assert.AreEqual("", result.Value);
+			Assert.AreEqual(null, result.Value);
 			Assert.AreEqual(0, reader.Position);
 
 			reader = new Reader("abc");
@@ -89,7 +94,7 @@ namespace ParserLib.UnitTest
 
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
-			Assert.AreEqual("", result.Value);
+			Assert.AreEqual(null, result.Value);
 			Assert.AreEqual(0, reader.Position);
 		}
 

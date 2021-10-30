@@ -28,7 +28,7 @@ namespace ParserLib.UnitTest
 		}
 		
 		[TestMethod]
-		public void ShouldParseIfFuncIsNull()
+		public void ShouldNotParseIfFuncIsNull()
 		{
 			Assert.ThrowsException<ArgumentNullException>(() => Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes(null));
 		}
