@@ -11,11 +11,11 @@ namespace ParserLib
     public interface IParser<out T> 
     {
 
-		T Parse(string Value);
+		T Parse(string Value,params char[] IgnoredChars);
 
 		T Parse(IReader Reader);
 
-		IParseResult<T> TryParse(string Value);
+		IParseResult<T> TryParse(string Value, params char[] IgnoredChars);
 
 		IParseResult<T> TryParse(IReader Reader);
 

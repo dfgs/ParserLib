@@ -17,10 +17,10 @@ namespace ParserLib
 			this.parserDelegate = ParserDelegate;
 		}
 
-		public T Parse(string Value)
+		public T Parse(string Value,params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
-			return Parse(new Reader(Value));
+			return Parse(new Reader(Value,IgnoredChars));
 		}
 		public T Parse(IReader Reader)
 		{
@@ -35,10 +35,10 @@ namespace ParserLib
 			Reader.Seek(position);
 			throw ((FailedParseResult<T>)result).Exception;
 		}
-		public IParseResult<T> TryParse(string Value)
+		public IParseResult<T> TryParse(string Value, params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
-			return TryParse(new Reader(Value));
+			return TryParse(new Reader(Value,IgnoredChars));
 		}
 		public IParseResult<T> TryParse(IReader Reader)
 		{
