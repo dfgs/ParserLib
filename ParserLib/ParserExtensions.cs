@@ -9,7 +9,7 @@ namespace ParserLib
 	public static class ParserExtensions
 	{
 		#region Linq extensions
-		public static Parser<U> Select<T,U>(this Parser<T> Parser, Func<T,U> Selector)
+		public static IParser<U> Select<T,U>(this IParser<T> Parser, Func<T,U> Selector)
 		{
 			ParserDelegate<U> parserDelegate= (reader) =>
 			{
@@ -29,9 +29,9 @@ namespace ParserLib
 			};
 			return new Parser<U>(parserDelegate);
 		}//*/
-		public static Parser<V> SelectMany<T, U, V>(
-		   this Parser<T> Parser,
-		   Func<T, Parser<U>> Selector,
+		public static IParser<V> SelectMany<T, U, V>(
+		   this IParser<T> Parser,
+		   Func<T, IParser<U>> Selector,
 		   Func<T, U, V> Projector)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
@@ -41,7 +41,7 @@ namespace ParserLib
 			return Parser.Then(t => Selector(t).Select(u => Projector(t, u)));
 		}
 
-		public static Parser<U> Then<T, U>(this Parser<T> First, Func<T, Parser<U>> second)
+		public static IParser<U> Then<T, U>(this IParser<T> First, Func<T, IParser<U>> second)
 		{
 
 			if (First == null) throw new ArgumentNullException(nameof(First));

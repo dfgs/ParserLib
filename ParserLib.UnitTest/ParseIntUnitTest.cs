@@ -9,7 +9,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			Parser<int> parser;
+			IParser<int> parser;
 			Reader reader;
 
 			parser = Parse.Int();
@@ -39,7 +39,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			Parser<int> parser;
+			IParser<int> parser;
 			Reader reader;
 
 			reader = new Reader("a");reader.Seek(1);
@@ -53,7 +53,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldTryParse()
 		{
-			Parser<int> parser;
+			IParser<int> parser;
 			Reader reader;
 			IParseResult<int> result;
 
@@ -90,7 +90,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotTryParseWhenEOF()
 		{
-			Parser<int> parser;
+			IParser<int> parser;
 			Reader reader;
 			IParseResult<int> result;
 

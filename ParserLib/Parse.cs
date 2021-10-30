@@ -9,7 +9,7 @@ namespace ParserLib
 {
 	public static class Parse
 	{
-		public static Parser<string> Char(char Value)
+		public static IParser<string> Char(char Value)
 		{
 			ParserDelegate<string> parserDelegate = (reader) =>
 			{
@@ -21,7 +21,7 @@ namespace ParserLib
 			};
 			return new Parser<string>(parserDelegate);
 		}
-		public static Parser<string> String(string Value)
+		public static IParser<string> String(string Value)
 		{
 			char input;
 
@@ -42,7 +42,7 @@ namespace ParserLib
 			};
 			return new Parser<string>(parserDelegate);
 		}
-		public static Parser<string> Any()
+		public static IParser<string> Any()
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
 				char input;
@@ -53,7 +53,7 @@ namespace ParserLib
 			return new Parser<string>(parserDelegate);
 		}
 
-		public static Parser<string> AnyOf(params char[] Values)
+		public static IParser<string> AnyOf(params char[] Values)
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
 				char input;
@@ -64,7 +64,7 @@ namespace ParserLib
 			};
 			return new Parser<string>(parserDelegate);
 		}
-		public static Parser<string> AnyInRange(char First,char Last)
+		public static IParser<string> AnyInRange(char First,char Last)
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
 				char input;
@@ -75,7 +75,7 @@ namespace ParserLib
 			};
 			return new Parser<string>(parserDelegate);
 		}
-		public static Parser<string> Except(params char[] Values)
+		public static IParser<string> Except(params char[] Values)
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
 				char input;
@@ -87,7 +87,7 @@ namespace ParserLib
 			return new Parser<string>(parserDelegate);
 		}
 
-		public static Parser<byte> Digit()
+		public static IParser<byte> Digit()
 		{
 			ParserDelegate<byte> parserDelegate = (reader) =>
 			{
@@ -112,10 +112,10 @@ namespace ParserLib
 			};
 			return new Parser<byte>(parserDelegate);
 		}
-		public static Parser<byte> Byte()
+		public static IParser<byte> Byte()
 		{
 			
-			Parser<string> a, b, c,d,e;
+			IParser<string> a, b, c,d,e;
 
 			a = Parse.Char('2').Then(Parse.Char('5')).Then(Parse.AnyInRange('0', '5'));
 			b = Parse.Char('2').Then(Parse.AnyInRange('0', '4')).Then(Parse.AnyInRange('0', '9'));
@@ -125,17 +125,17 @@ namespace ParserLib
 			return from value in a.Or(b).Or(c).Or(d).Or(e)
 				   select Convert.ToByte(value);
 		}
-		public static Parser<int> Int()
+		public static IParser<int> Int()
 		{
 
-			Parser<string> positive,negative;
+			IParser<string> positive,negative;
 
 			negative = Parse.Char('-').Then(Parse.AnyInRange('0', '9').OneOrMoreTimes());
 			positive = Parse.AnyInRange('0', '9').OneOrMoreTimes();
 			return from value in positive.Or(negative)
 				   select Convert.ToInt32(value);
 		}
-		public static Parser<IPAddress> IPAddress()
+		public static IParser<IPAddress> IPAddress()
 		{
 
 			return
@@ -150,7 +150,7 @@ namespace ParserLib
 				select new IPAddress(new byte[] {A,B,C,D });
 		}
 
-		public static Parser<T> Or<T>(this Parser<T> A, Parser<T> B)
+		public static IParser<T> Or<T>(this IParser<T> A, IParser<T> B)
 		{
 			if (A == null) throw new ArgumentNullException(nameof(A));
 			if (B == null) throw new ArgumentNullException(nameof(B));
@@ -167,7 +167,7 @@ namespace ParserLib
 			return new Parser<T>(parseDelegate);
 		}
 
-		public static Parser<string> Then(this Parser<string> A, Parser<string> B)
+		public static IParser<string> Then(this IParser<string> A, IParser<string> B)
 		{
 			if (A == null) throw new ArgumentNullException(nameof(A));
 			if (B == null) throw new ArgumentNullException(nameof(B));
@@ -185,7 +185,7 @@ namespace ParserLib
 			};
 			return new Parser<string>(parserDelegate);
 		}
-		public static Parser<IEnumerable<T>> OneOrMoreTimes<T>(this Parser<T> Parser)
+		public static IParser<IEnumerable<T>> OneOrMoreTimes<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<IEnumerable<T>> parserDelegate = (reader) =>
@@ -215,7 +215,7 @@ namespace ParserLib
 			};
 			return new Parser<IEnumerable<T>>(parserDelegate);
 		}
-		public static Parser<T> OneOrMoreTimes<T>(this Parser<T> Parser,Func<IEnumerable<T>,T> Func)
+		public static IParser<T> OneOrMoreTimes<T>(this IParser<T> Parser,Func<IEnumerable<T>,T> Func)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			if (Func == null) throw new ArgumentNullException(nameof(Func));
@@ -240,11 +240,11 @@ namespace ParserLib
 			};
 			return new Parser<T>(parserDelegate);
 		}
-		public static Parser<string> OneOrMoreTimes(this Parser<string> Parser)
+		public static IParser<string> OneOrMoreTimes(this IParser<string> Parser)
 		{
 			return Parser.OneOrMoreTimes((items) => string.Join("", items));
 		}
-		public static Parser<IEnumerable<T>> ZeroOrMoreTimes<T>(this Parser<T> Parser)
+		public static IParser<IEnumerable<T>> ZeroOrMoreTimes<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<IEnumerable<T>> parserDelegate = (reader) =>
@@ -270,7 +270,7 @@ namespace ParserLib
 			return new Parser<IEnumerable<T>>(parserDelegate);
 
 		}
-		public static Parser<T> ZeroOrMoreTimes<T>(this Parser<T> Parser, Func<IEnumerable<T>, T> Func)
+		public static IParser<T> ZeroOrMoreTimes<T>(this IParser<T> Parser, Func<IEnumerable<T>, T> Func)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			if (Func == null) throw new ArgumentNullException(nameof(Func));
@@ -296,12 +296,12 @@ namespace ParserLib
 			};
 			return new Parser<T>(parserDelegate);
 		}
-		public static Parser<string> ZeroOrMoreTimes(this Parser<string> Parser)
+		public static IParser<string> ZeroOrMoreTimes(this IParser<string> Parser)
 		{
 			return Parser.ZeroOrMoreTimes((items) => string.Join("", items));
 		}
 
-		public static Parser<T> ZeroOrOneTime<T>(this Parser<T> Parser)
+		public static IParser<T> ZeroOrOneTime<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<T> parserDelegate = (reader) =>

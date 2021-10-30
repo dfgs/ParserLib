@@ -9,7 +9,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			Parser<string> a,b,parser;
+			IParser<string> a,b,parser;
 			Reader reader;
 
 			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
@@ -28,7 +28,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParse()
 		{
-			Parser<string> a, b, parser;
+			IParser<string> a, b, parser;
 			Reader reader;
 
 			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
@@ -43,7 +43,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			Parser<string> a, b, parser;
+			IParser<string> a, b, parser;
 			Reader reader;
 
 			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
@@ -59,7 +59,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldTryParse()
 		{
-			Parser<string> a, b, parser;
+			IParser<string> a, b, parser;
 			Reader reader;
 			IParseResult<string> result;
 
@@ -86,7 +86,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotTryParse()
 		{
-			Parser<string> a, b, parser;
+			IParser<string> a, b, parser;
 			Reader reader;
 			IParseResult<string> result;
 
@@ -105,7 +105,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotTryParseWhenEOF()
 		{
-			Parser<string> a, b, parser;
+			IParser<string> a, b, parser;
 			Reader reader;
 			IParseResult<string> result;
 

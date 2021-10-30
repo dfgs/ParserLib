@@ -11,7 +11,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			Parser<string> parser;
+			IParser<string> parser;
 			Reader reader;
 
 			reader = new Reader("adc");
@@ -34,7 +34,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			Parser<string> parser;
+			IParser<string> parser;
 			Reader reader;
 
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
@@ -52,7 +52,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldTryParse()
 		{
-			Parser<string> parser;
+			IParser<string> parser;
 			Reader reader;
 			IParseResult<string> result;
 
@@ -84,7 +84,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotTryParseWhenEOF()
 		{
-			Parser<string> parser;
+			IParser<string> parser;
 			Reader reader;
 			IParseResult<string> result;
 
