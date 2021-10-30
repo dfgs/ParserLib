@@ -26,6 +26,13 @@ namespace ParserLib.UnitTest
 			Assert.AreEqual("abcabc", parser.Parse(reader));
 			Assert.AreEqual(6, reader.Position);
 		}
+		
+		[TestMethod]
+		public void ShouldParseIfFuncIsNull()
+		{
+			Assert.ThrowsException<ArgumentNullException>(() => Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes(null));
+		}
+
 		[TestMethod]
 		public void ShouldNotParse()
 		{
