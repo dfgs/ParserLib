@@ -21,6 +21,27 @@ namespace ParserLib
 			};
 			return new Parser<string>(parserDelegate);
 		}
+		public static Parser<string> String(string Value)
+		{
+			char input;
+
+			if (Value == null) throw new ArgumentNullException(nameof(Value));
+			
+			ParserDelegate<string> parserDelegate = (reader) =>
+			{
+				foreach(char value in Value)
+				{
+					if (reader.EOF) return ParseResult<string>.EndOfReader();
+					input = reader.Read();
+					if (input == value) continue;
+					else return ParseResult<string>.Failed(input);
+
+				}
+				
+				return ParseResult<string>.Succeeded(Value);
+			};
+			return new Parser<string>(parserDelegate);
+		}
 		public static Parser<string> Any()
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
