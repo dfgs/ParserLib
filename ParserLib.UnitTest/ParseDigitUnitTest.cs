@@ -53,7 +53,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<byte> parser;
 			Reader reader;
-			ParseResult<byte> result;
+			IParseResult<byte> result;
 
 			reader = new Reader("0123456789");
 			parser = Parse.Digit();
@@ -72,7 +72,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<byte> parser;
 			Reader reader;
-			ParseResult<byte> result;
+			IParseResult<byte> result;
 
 			reader = new Reader("abc");
 			parser = Parse.Digit();
@@ -88,7 +88,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<byte> parser;
 			Reader reader;
-			ParseResult<byte> result;
+			IParseResult<byte> result;
 
 			reader = new Reader("a"); reader.Seek(1);
 			parser = Parse.Digit();

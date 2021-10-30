@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public abstract class ParseResult<T> 
+	public abstract class ParseResult<T> :IParseResult<T>
 	{
 		public abstract bool IsSuccess
 		{

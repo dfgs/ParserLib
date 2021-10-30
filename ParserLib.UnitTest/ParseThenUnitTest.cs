@@ -51,7 +51,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("abc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
@@ -66,7 +66,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("abd");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
@@ -82,7 +82,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("aa"); reader.Seek(1);
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));

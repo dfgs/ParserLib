@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-    public delegate ParseResult<T> ParserDelegate<T>(IReader Reader);
-
-    public class Parser<T> 
+ 
+    public class Parser<T>:IParser<T>
     {
 
 		private ParserDelegate<T> parserDelegate;
@@ -25,7 +24,7 @@ namespace ParserLib
 		}
 		public T Parse(IReader Reader)
 		{
-			ParseResult<T> result;
+			IParseResult<T> result;
 			long position;
 
 			if (Reader == null) throw new ArgumentNullException(nameof(Reader));
@@ -36,14 +35,14 @@ namespace ParserLib
 			Reader.Seek(position);
 			throw ((FailedParseResult<T>)result).Exception;
 		}
-		public ParseResult<T> TryParse(string Value)
+		public IParseResult<T> TryParse(string Value)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
 			return TryParse(new Reader(Value));
 		}
-		public ParseResult<T> TryParse(IReader Reader)
+		public IParseResult<T> TryParse(IReader Reader)
 		{
-			ParseResult<T> result;
+			IParseResult<T> result;
 			long position;
 
 			if (Reader == null) throw new ArgumentNullException(nameof(Reader));

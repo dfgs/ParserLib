@@ -46,9 +46,11 @@
     <Compile Include="IReader.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="Exceptions\ParseException.cs" />
+    <Compile Include="IParser.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ParseResult\FailedParseResult.cs" />
     <Compile Include="ParseResult\EndOfReaderParseResult.cs" />
+    <Compile Include="ParseResult\IParseResult.cs" />
     <Compile Include="ParseResult\UnexpectedCharParseResult.cs" />
     <Compile Include="ParseResult\SucceededParseResult.cs" />
     <Compile Include="ParseResult\ParseResult.cs" />

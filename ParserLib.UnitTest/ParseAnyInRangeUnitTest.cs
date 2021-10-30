@@ -50,7 +50,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("abc");
 			parser = Parse.AnyInRange('a', 'c');
@@ -65,7 +65,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("dbc");
 			parser = Parse.AnyInRange('a', 'c');
@@ -81,7 +81,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("a"); reader.Seek(1);
 			parser = Parse.AnyInRange('a', 'c');

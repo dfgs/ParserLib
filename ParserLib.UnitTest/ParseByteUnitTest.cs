@@ -70,7 +70,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<byte> parser;
 			Reader reader;
-			ParseResult<byte> result;
+			IParseResult<byte> result;
 
 			parser = Parse.Byte();
 
@@ -104,7 +104,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<byte> parser;
 			Reader reader;
-			ParseResult<byte> result;
+			IParseResult<byte> result;
 
 			parser = Parse.Byte();
 
@@ -133,7 +133,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<byte> parser;
 			Reader reader;
-			ParseResult<byte> result;
+			IParseResult<byte> result;
 
 			parser = Parse.Byte();
 

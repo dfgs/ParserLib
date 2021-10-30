@@ -50,7 +50,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("abc");
 			parser = Parse.AnyOf('c', 'b', 'a');
@@ -65,7 +65,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("dbc");
 			parser = Parse.AnyOf('c', 'b', 'a');
@@ -81,7 +81,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<string> parser;
 			Reader reader;
-			ParseResult<string> result;
+			IParseResult<string> result;
 
 			reader = new Reader("a"); reader.Seek(1);
 			parser = Parse.AnyOf('c', 'b', 'a');

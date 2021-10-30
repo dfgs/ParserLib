@@ -13,7 +13,7 @@ namespace ParserLib
 		{
 			ParserDelegate<U> parserDelegate= (reader) =>
 			{
-				ParseResult<T> result;
+				IParseResult<T> result;
 				result=Parser.TryParse(reader);
 				switch(result)
 				{
@@ -48,8 +48,8 @@ namespace ParserLib
 			if (second == null) throw new ArgumentNullException(nameof(second));
 
 			ParserDelegate<U> parserDelegate = (reader) => {
-				ParseResult<T> result1;
-				ParseResult<U> result2;
+				IParseResult<T> result1;
+				IParseResult<U> result2;
 
 				result1 = First.TryParse(reader);
 				switch (result1)

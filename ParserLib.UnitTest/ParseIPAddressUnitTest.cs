@@ -51,7 +51,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<IPAddress> parser;
 			Reader reader;
-			ParseResult<IPAddress> result;
+			IParseResult<IPAddress> result;
 
 			reader = new Reader("192.168.0.1");
 			parser = Parse.IPAddress();
@@ -66,7 +66,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<IPAddress> parser;
 			Reader reader;
-			ParseResult<IPAddress> result;
+			IParseResult<IPAddress> result;
 
 			reader = new Reader("192.256.0.1");
 			parser = Parse.IPAddress();
@@ -82,7 +82,7 @@ namespace ParserLib.UnitTest
 		{
 			Parser<IPAddress> parser;
 			Reader reader;
-			ParseResult<IPAddress> result;
+			IParseResult<IPAddress> result;
 
 			reader = new Reader("192."); reader.Seek(1);
 			parser = Parse.IPAddress();

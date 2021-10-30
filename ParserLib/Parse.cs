@@ -156,7 +156,7 @@ namespace ParserLib
 			if (B == null) throw new ArgumentNullException(nameof(B));
 			ParserDelegate<T> parseDelegate = (reader) =>
 			{
-				ParseResult<T> result;
+				IParseResult<T> result;
 
 				result = A.TryParse(reader);
 				if (result.IsSuccess) return result;
@@ -173,8 +173,8 @@ namespace ParserLib
 			if (B == null) throw new ArgumentNullException(nameof(B));
 			ParserDelegate<string> parserDelegate = (reader) =>
 			{
-				ParseResult<string> result1;
-				ParseResult<string> result2;
+				IParseResult<string> result1;
+				IParseResult<string> result2;
 
 				result1 = A.TryParse(reader);
 				if (!result1.IsSuccess) return result1;
@@ -190,7 +190,7 @@ namespace ParserLib
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<IEnumerable<T>> parserDelegate = (reader) =>
 			{
-				ParseResult<T> result;
+				IParseResult<T> result;
 				List<T> items;
 
 				result = Parser.TryParse(reader);
@@ -221,7 +221,7 @@ namespace ParserLib
 			if (Func == null) throw new ArgumentNullException(nameof(Func));
 			ParserDelegate<T> parserDelegate = (reader) =>
 			{
-				ParseResult<T> result;
+				IParseResult<T> result;
 				List<T> items;
 
 				result = Parser.TryParse(reader);
@@ -249,7 +249,7 @@ namespace ParserLib
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<IEnumerable<T>> parserDelegate = (reader) =>
 			{
-				ParseResult<T> result;
+				IParseResult<T> result;
 				List<T> items;
 				
 
@@ -276,7 +276,7 @@ namespace ParserLib
 			if (Func == null) throw new ArgumentNullException(nameof(Func));
 			ParserDelegate<T> parserDelegate = (reader) =>
 			{
-				ParseResult<T> result;
+				IParseResult<T> result;
 				List<T> items;
 
 
@@ -306,7 +306,7 @@ namespace ParserLib
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<T> parserDelegate = (reader) =>
 			{
-				ParseResult<T> result;
+				IParseResult<T> result;
 
 				result = Parser.TryParse(reader);
 				if (result.IsSuccess) return result;
