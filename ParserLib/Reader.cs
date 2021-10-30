@@ -7,6 +7,8 @@ namespace ParserLib
 	public class Reader : IReader
 	{
 		private char[] value;
+
+		private char[] ignoredChars;
 		private long position;
 		public long Position
 		{
@@ -15,19 +17,26 @@ namespace ParserLib
 
 		public bool EOF => position >= value.Length;
 
-		public Reader(IEnumerable<char> Value)
+		public Reader(IEnumerable<char> Value,params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
+			ignoredChars = IgnoredChars;
 			this.value = Value.ToArray();
 			position = 0;
 		}
+			
 
-	
-
-		public char Read()
+		public bool Read(out char Value)
 		{
-			if (EOF) throw new IndexOutOfRangeException();
-			return value[position++];
+			Value=(char)0;
+
+			while (true)
+			{
+				if (EOF) return false;
+				Value= value[position++];
+				if (ignoredChars.Contains(Value)) continue;
+				return true;
+			}
 		}
 
 		public void Seek(long Position)

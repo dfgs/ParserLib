@@ -33,26 +33,62 @@ namespace ParserLib.UnitTest
 		public void ShouldRead()
 		{
 			Reader reader;
+			char value;
+			bool result;
 
 			reader = new Reader("abc");
-			Assert.AreEqual('a', reader.Read());
-			Assert.AreEqual('b', reader.Read());
-			Assert.AreEqual('c', reader.Read());
+
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('a', value);
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('b', value);
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('c', value);
+
+			Assert.IsTrue(reader.EOF);
+			result = reader.Read(out value);
+			Assert.IsFalse(result);
+		}
+		[TestMethod]
+		public void ShouldIgnoreChars()
+		{
+			Reader reader;
+			char value;
+			bool result;
+
+			reader = new Reader("a b c ",' ');
+
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('a', value);
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('b', value);
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('c', value);
+
+			Assert.IsFalse(reader.EOF);
+			result = reader.Read(out value);
+			Assert.IsFalse(result);
 			Assert.IsTrue(reader.EOF);
 		}
 
-		
 		[TestMethod]
 		public void ShouldNotReadWhenEOF()
 		{
 			Reader reader;
-
+			char value;
+				
 			reader = new Reader("abc");
-			Assert.AreEqual('a', reader.Read());
-			Assert.AreEqual('b', reader.Read());
-			Assert.AreEqual('c', reader.Read());
+			Assert.IsTrue(reader.Read(out value));
+			Assert.IsTrue(reader.Read(out value));
+			Assert.IsTrue(reader.Read(out value));
 			Assert.IsTrue(reader.EOF);
-			Assert.ThrowsException<IndexOutOfRangeException>(() => reader.Read());
+			Assert.IsFalse(reader.Read(out value));
 		}
 
 		[TestMethod]

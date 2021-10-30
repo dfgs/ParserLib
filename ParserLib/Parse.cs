@@ -14,8 +14,7 @@ namespace ParserLib
 			ParserDelegate<string> parserDelegate = (reader) =>
 			{
 				char input;
-				if (reader.EOF) return ParseResult<string>.EndOfReader();
-				input = reader.Read();
+				if (!reader.Read(out input)) return ParseResult<string>.EndOfReader();
 				if (input == Value) return ParseResult<string>.Succeeded(input.ToString());
 				else return ParseResult<string>.Failed(input);
 			};
@@ -31,8 +30,7 @@ namespace ParserLib
 			{
 				foreach(char value in Value)
 				{
-					if (reader.EOF) return ParseResult<string>.EndOfReader();
-					input = reader.Read();
+					if (!reader.Read(out input)) return ParseResult<string>.EndOfReader();
 					if (input == value) continue;
 					else return ParseResult<string>.Failed(input);
 
@@ -46,8 +44,7 @@ namespace ParserLib
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
 				char input;
-				if (reader.EOF) return ParseResult<string>.EndOfReader();
-				input = reader.Read();
+				if (!reader.Read(out input)) return ParseResult<string>.EndOfReader();
 				return ParseResult<string>.Succeeded( input.ToString());
 			};
 			return new Parser<string>(parserDelegate);
@@ -57,8 +54,7 @@ namespace ParserLib
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
 				char input;
-				if (reader.EOF) return ParseResult<string>.EndOfReader();
-				input = reader.Read();
+				if (!reader.Read(out input)) return ParseResult<string>.EndOfReader();
 				if (Values.Contains(input)) return ParseResult<string>.Succeeded(input.ToString());
 				else return ParseResult<string>.Failed(input);
 			};
@@ -68,8 +64,7 @@ namespace ParserLib
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
 				char input;
-				if (reader.EOF) return ParseResult<string>.EndOfReader();
-				input = reader.Read();
+				if (!reader.Read(out input)) return ParseResult<string>.EndOfReader();
 				if ((input>=First) && (input <= Last)) return ParseResult<string>.Succeeded(input.ToString());
 				else return ParseResult<string>.Failed(input);
 			};
@@ -79,8 +74,7 @@ namespace ParserLib
 		{
 			ParserDelegate<string> parserDelegate = (reader) => {
 				char input;
-				if (reader.EOF) return ParseResult<string>.EndOfReader();
-				input = reader.Read();
+				if (!reader.Read(out input)) return ParseResult<string>.EndOfReader();
 				if (!Values.Contains(input)) return ParseResult<string>.Succeeded(input.ToString());
 				else return ParseResult<string>.Failed(input);
 			};
@@ -92,9 +86,8 @@ namespace ParserLib
 			ParserDelegate<byte> parserDelegate = (reader) =>
 			{
 				char input;
-				if (reader.EOF) return ParseResult<byte>.EndOfReader();
-				input = reader.Read();
-				switch(input)
+				if (!reader.Read(out input)) return ParseResult<byte>.EndOfReader();
+				switch (input)
 				{
 					case '0': return ParseResult<byte>.Succeeded((byte)0);
 					case '1': return ParseResult<byte>.Succeeded((byte)1);
