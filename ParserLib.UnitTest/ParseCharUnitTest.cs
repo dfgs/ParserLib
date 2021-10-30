@@ -19,6 +19,18 @@ namespace ParserLib.UnitTest
 			Assert.AreEqual(1, reader.Position);
 		}
 		[TestMethod]
+		public void ShouldParseWithIgnoredChars()
+		{
+			IParser<string> parser;
+			Reader reader;
+
+			reader = new Reader("   abc",' ');
+			parser = Parse.Char('a');
+
+			Assert.AreEqual("a", parser.Parse(reader));
+			Assert.AreEqual(4, reader.Position);
+		}
+		[TestMethod]
 		public void ShouldNotParse()
 		{
 			IParser<string> parser;
