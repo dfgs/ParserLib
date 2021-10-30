@@ -104,6 +104,16 @@ namespace ParserLib
 			return from value in a.Or(b).Or(c).Or(d).Or(e)
 				   select Convert.ToByte(value);
 		}
+		public static Parser<int> Int()
+		{
+
+			Parser<string> positive,negative;
+
+			negative = Parse.Char('-').Then(Parse.AnyInRange('0', '9').OneOrMoreTimes());
+			positive = Parse.AnyInRange('0', '9').OneOrMoreTimes();
+			return from value in positive.Or(negative)
+				   select Convert.ToInt32(value);
+		}
 		public static Parser<IPAddress> IPAddress()
 		{
 

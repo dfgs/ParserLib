@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ParseAnyInRangeUnitTest.cs" />
+    <Compile Include="ParseIntUnitTest.cs" />
     <Compile Include="ParseByteUnitTest.cs" />
     <Compile Include="ParseIPAddressUnitTest.cs" />
     <Compile Include="ParseDigitUnitTest.cs" />
