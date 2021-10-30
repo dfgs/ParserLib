@@ -26,7 +26,23 @@ namespace ParserLib.UnitTest
 			Assert.AreEqual("abcabc", parser.Parse(reader));
 			Assert.AreEqual(6, reader.Position);
 		}
-		
+		[TestMethod]
+		public void ShouldParseWithEnumeration()
+		{
+			Parser<IEnumerable<byte>> parser;
+			Reader reader;
+			byte[] result;
+
+			reader = new Reader("1234");
+			parser = Parse.Digit().OneOrMoreTimes();
+			result = parser.Parse(reader).ToArray();
+
+			Assert.AreEqual(4, result.Length);
+			Assert.AreEqual(1, result[0]);
+			Assert.AreEqual(2, result[1]);
+			Assert.AreEqual(3, result[2]);
+		}
+
 		[TestMethod]
 		public void ShouldNotParseIfFuncIsNull()
 		{
@@ -42,6 +58,18 @@ namespace ParserLib.UnitTest
 			reader = new Reader("abd");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
 
+			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
+			Assert.AreEqual(0, reader.Position);
+		}
+
+		[TestMethod]
+		public void ShouldNotParseWithEnumeration()
+		{
+			Parser<IEnumerable<byte>> parser;
+			Reader reader;
+
+			reader = new Reader("a1234");
+			parser = Parse.Digit().OneOrMoreTimes();
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
 		}
