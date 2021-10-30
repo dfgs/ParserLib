@@ -6,11 +6,11 @@ namespace ParserLib.UnitTest
 	[TestClass]
 	public class ParseResultUnitTest
 	{
-		[TestMethod]
+		/*[TestMethod]
 		public void ShouldCheckConstructorParameters()
 		{
 			Assert.ThrowsException<ArgumentNullException>(() => ParseResult<string>.Succeeded( null));
-		}
+		}*/
 		/*[TestMethod]
 		public void ShouldPopReaderWhenSuccess()
 		{

@@ -20,7 +20,7 @@ namespace ParserLib
 				
 		public static SucceededParseResult<T> Succeeded(T Value)
 		{
-			if (Value == null) throw new ArgumentNullException(nameof(Value));
+			//if (Value == null) throw new ArgumentNullException(nameof(Value));
 			return new SucceededParseResult<T>(Value);
 		}
 		public static UnexpectedCharParseResult<T> Failed(char Input)

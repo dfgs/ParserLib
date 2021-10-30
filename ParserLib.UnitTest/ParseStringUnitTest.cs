@@ -36,7 +36,11 @@ namespace ParserLib.UnitTest
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
 		}
-
+		[TestMethod]
+		public void ShouldNotParseNull()
+		{
+			Assert.ThrowsException<ArgumentNullException>(() => Parse.String(null));
+		}
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{

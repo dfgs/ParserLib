@@ -236,19 +236,19 @@ namespace ParserLib
 			return new Parser<string>(parserDelegate);
 
 		}
-		public static Parser<string> ZeroOrOneTime(this Parser<string> Parser)
+		public static Parser<T> ZeroOrOneTime<T>(this Parser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
-			ParserDelegate<string> parserDelegate = (reader) =>
+			ParserDelegate<T> parserDelegate = (reader) =>
 			{
-				ParseResult<string> result;
+				ParseResult<T> result;
 
 				result = Parser.TryParse(reader);
 				if (result.IsSuccess) return result;
 
-				return ParseResult<string>.Succeeded("");
+				return ParseResult<T>.Succeeded(default(T));
 			};
-			return new Parser<string>(parserDelegate);
+			return new Parser<T>(parserDelegate);
 
 		}
 
