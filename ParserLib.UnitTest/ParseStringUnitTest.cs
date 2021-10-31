@@ -10,9 +10,9 @@ namespace ParserLib.UnitTest
 		public void ShouldParse()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.String("abc");
 
 			Assert.AreEqual("abc", parser.Parse(reader));
@@ -22,15 +22,15 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParse()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.String("acb");
 
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.String("abd");
 
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
@@ -45,9 +45,9 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParseWhenEOF()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("ab");
+			reader = new StringReader("ab");
 			parser = Parse.String("abc");
 
 			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
@@ -59,10 +59,10 @@ namespace ParserLib.UnitTest
 		public void ShouldTryParse()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<string> result;
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.String("abc");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
@@ -74,10 +74,10 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParse()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<string> result;
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.String("acb");
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result.IsSuccess);
@@ -90,10 +90,10 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParseWhenEOF()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<string> result;
 
-			reader = new Reader("ab"); reader.Seek(1);
+			reader = new StringReader("ab"); reader.Seek(1);
 			parser = Parse.String("abc");
 
 			result = parser.TryParse(reader);

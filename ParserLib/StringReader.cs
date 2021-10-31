@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ParserLib
 {
-	public class Reader : IReader
+	public class StringReader : IReader
 	{
 		private char[] value;
 
@@ -17,7 +17,7 @@ namespace ParserLib
 
 		public bool EOF => position >= value.Length;
 
-		public Reader(IEnumerable<char> Value,params char[] IgnoredChars)
+		public StringReader(IEnumerable<char> Value,params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
 			ignoredChars = IgnoredChars;

@@ -1,30 +1,31 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Text;
 
 namespace ParserLib.UnitTest
 {
 	[TestClass]
-	public class ReaderUnitTest
+	public class StreamReaderUnitTest
 	{
 		[TestMethod]
 		public void ShouldCheckConstructorParameters()
 		{
-			Assert.ThrowsException<ArgumentNullException>(() => new Reader(null));
+			Assert.ThrowsException<ArgumentNullException>(() => new StreamReader(null));
 		}
 		[TestMethod]
 		public void ShouldReturnEOFIsTrueWhenValueIsEmpty()
 		{
-			Reader reader;
+			StreamReader reader;
 
-			reader=  new Reader("");
+			reader=  new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("")));
 			Assert.IsTrue(reader.EOF);
 		}
 		[TestMethod]
 		public void ShouldReturnEOFIsFalseWhenValueIsNotEmpty()
 		{
-			Reader reader;
+			StreamReader reader;
 
-			reader = new Reader("a");
+			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("a")));
 			Assert.IsFalse(reader.EOF);
 		}
 
@@ -32,11 +33,11 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldRead()
 		{
-			Reader reader;
+			StreamReader reader;
 			char value;
 			bool result;
 
-			reader = new Reader("abc");
+			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("abc")));
 
 			result = reader.Read(out value);
 			Assert.IsTrue(result);
@@ -55,11 +56,11 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldIgnoreChars()
 		{
-			Reader reader;
+			StreamReader reader;
 			char value;
 			bool result;
 
-			reader = new Reader("a b c ",' ');
+			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("a b c ")),' ');
 
 			result = reader.Read(out value);
 			Assert.IsTrue(result);
@@ -80,10 +81,10 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotReadWhenEOF()
 		{
-			Reader reader;
+			StreamReader reader;
 			char value;
-				
-			reader = new Reader("abc");
+
+			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("abc")));
 			Assert.IsTrue(reader.Read(out value));
 			Assert.IsTrue(reader.Read(out value));
 			Assert.IsTrue(reader.Read(out value));
@@ -94,9 +95,9 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldSeek()
 		{
-			Reader reader;
+			StreamReader reader;
 
-			reader = new Reader("abc");
+			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("abc")));
 			reader.Seek(1);
 			Assert.AreEqual(1, reader.Position);
 			Assert.IsFalse(reader.EOF);
@@ -113,11 +114,11 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotSeek()
 		{
-			Reader reader;
+			StreamReader reader;
 
-			reader = new Reader("abc");
-			Assert.ThrowsException<IndexOutOfRangeException>(() => reader.Seek(-1));
-			Assert.ThrowsException<IndexOutOfRangeException>(() => reader.Seek(10));
+			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("abc")));
+			Assert.ThrowsException< System.IO.IOException> (() => reader.Seek(-1));
+			Assert.ThrowsException<System.IO.IOException>(() => reader.Seek(10));
 		}
 
 

@@ -20,7 +20,7 @@ namespace ParserLib
 		public T Parse(string Value,params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
-			return Parse(new Reader(Value,IgnoredChars));
+			return Parse(new StringReader(Value,IgnoredChars));
 		}
 		public T Parse(IReader Reader)
 		{
@@ -38,7 +38,7 @@ namespace ParserLib
 		public IParseResult<T> TryParse(string Value, params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
-			return TryParse(new Reader(Value,IgnoredChars));
+			return TryParse(new StringReader(Value,IgnoredChars));
 		}
 		public IParseResult<T> TryParse(IReader Reader)
 		{

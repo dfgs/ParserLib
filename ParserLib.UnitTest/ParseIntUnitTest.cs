@@ -10,27 +10,27 @@ namespace ParserLib.UnitTest
 		public void ShouldParse()
 		{
 			IParser<int> parser;
-			Reader reader;
+			StringReader reader;
 
 			parser = Parse.Int();
 
-			reader = new Reader("2555");
+			reader = new StringReader("2555");
 			Assert.AreEqual(2555, parser.Parse(reader));
 			Assert.AreEqual(4, reader.Position);
 
-			reader = new Reader("1999");
+			reader = new StringReader("1999");
 			Assert.AreEqual(1999, parser.Parse(reader));
 			Assert.AreEqual(4, reader.Position);
 			
-			reader = new Reader("-99");
+			reader = new StringReader("-99");
 			Assert.AreEqual(-99, parser.Parse(reader));
 			Assert.AreEqual(3, reader.Position);
 
-			reader = new Reader("0");
+			reader = new StringReader("0");
 			Assert.AreEqual(0, parser.Parse(reader));
 			Assert.AreEqual(1, reader.Position);
 
-			reader = new Reader("-0");
+			reader = new StringReader("-0");
 			Assert.AreEqual(0, parser.Parse(reader));
 			Assert.AreEqual(2, reader.Position);
 		}
@@ -40,9 +40,9 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParseWhenEOF()
 		{
 			IParser<int> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("a");reader.Seek(1);
+			reader = new StringReader("a");reader.Seek(1);
 			parser = Parse.Int();
 
 			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
@@ -54,30 +54,30 @@ namespace ParserLib.UnitTest
 		public void ShouldTryParse()
 		{
 			IParser<int> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<int> result;
 
 			parser = Parse.Int();
 
-			reader = new Reader("2555");
+			reader = new StringReader("2555");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual(2555, result.Value);
 			Assert.AreEqual(4, reader.Position);
 
-			reader = new Reader("1999");
+			reader = new StringReader("1999");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual(1999, result.Value);
 			Assert.AreEqual(4, reader.Position);
 
-			reader = new Reader("-99");
+			reader = new StringReader("-99");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual(-99, result.Value);
 			Assert.AreEqual(3, reader.Position);
 
-			reader = new Reader("0");
+			reader = new StringReader("0");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual(0, result.Value);
@@ -91,12 +91,12 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParseWhenEOF()
 		{
 			IParser<int> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<int> result;
 
 			parser = Parse.Int();
 
-			reader = new Reader("a"); reader.Seek(1);
+			reader = new StringReader("a"); reader.Seek(1);
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result.IsSuccess);
 			Assert.AreEqual(0, result.Value);

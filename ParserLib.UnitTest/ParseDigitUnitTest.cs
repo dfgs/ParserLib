@@ -10,9 +10,9 @@ namespace ParserLib.UnitTest
 		public void ShouldParse()
 		{
 			IParser<byte> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("0123456789");
+			reader = new StringReader("0123456789");
 			parser = Parse.Digit();
 
 			for (byte t = 0; t < 10; t++)
@@ -25,9 +25,9 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParse()
 		{
 			IParser<byte> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.Digit();
 
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
@@ -38,9 +38,9 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParseWhenEOF()
 		{
 			IParser<byte> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("a");reader.Seek(1);
+			reader = new StringReader("a");reader.Seek(1);
 			parser = Parse.Digit();
 
 			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
@@ -52,10 +52,10 @@ namespace ParserLib.UnitTest
 		public void ShouldTryParse()
 		{
 			IParser<byte> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<byte> result;
 
-			reader = new Reader("0123456789");
+			reader = new StringReader("0123456789");
 			parser = Parse.Digit();
 
 			for (byte t = 0; t < 10; t++)
@@ -71,10 +71,10 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParse()
 		{
 			IParser<byte> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<byte> result;
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.Digit();
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result.IsSuccess);
@@ -87,10 +87,10 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParseWhenEOF()
 		{
 			IParser<byte> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<byte> result;
 
-			reader = new Reader("a"); reader.Seek(1);
+			reader = new StringReader("a"); reader.Seek(1);
 			parser = Parse.Digit();
 
 			result = parser.TryParse(reader);

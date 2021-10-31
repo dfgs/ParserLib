@@ -12,19 +12,19 @@ namespace ParserLib.UnitTest
 		public void ShouldParse()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("adc");
+			reader = new StringReader("adc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 			Assert.AreEqual(null, parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 			Assert.AreEqual("abc", parser.Parse(reader));
 			Assert.AreEqual(3, reader.Position);
 
-			reader = new Reader("abcabc");
+			reader = new StringReader("abcabc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 			Assert.AreEqual("abc", parser.Parse(reader));
 			Assert.AreEqual(3, reader.Position);
@@ -35,15 +35,15 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParseWhenEOF()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 
-			reader = new Reader("ab");
+			reader = new StringReader("ab");
 			Assert.AreEqual(null, parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
 			
-			reader = new Reader("a");reader.Seek(1);
+			reader = new StringReader("a");reader.Seek(1);
 			Assert.AreEqual(null, parser.Parse(reader));
 			Assert.AreEqual(1, reader.Position);
 		}
@@ -53,24 +53,24 @@ namespace ParserLib.UnitTest
 		public void ShouldTryParse()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<string> result;
 
-			reader = new Reader("adc");
+			reader = new StringReader("adc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual(null, result.Value);
 			Assert.AreEqual(0, reader.Position);
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual("abc", result.Value);
 			Assert.AreEqual(3, reader.Position);
 
-			reader = new Reader("abcabc");
+			reader = new StringReader("abcabc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
@@ -85,18 +85,18 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParseWhenEOF()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<string> result;
 
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime();
 
-			reader = new Reader("ab");
+			reader = new StringReader("ab");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual(null, result.Value);
 			Assert.AreEqual(0, reader.Position);
 
-			reader = new Reader("a"); reader.Seek(1);
+			reader = new StringReader("a"); reader.Seek(1);
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
 			Assert.AreEqual(null, result.Value);

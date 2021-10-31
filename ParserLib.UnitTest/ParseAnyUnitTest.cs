@@ -10,9 +10,9 @@ namespace ParserLib.UnitTest
 		public void ShouldParse()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.Any();
 
 			Assert.AreEqual("a", parser.Parse(reader));
@@ -22,9 +22,9 @@ namespace ParserLib.UnitTest
 		public void ShouldParseWithIgnoredChars()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("   abc", ' ');
+			reader = new StringReader("   abc", ' ');
 			parser = Parse.Any();
 
 			Assert.AreEqual("a", parser.Parse(reader));
@@ -35,9 +35,9 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParseWhenEOF()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("a"); reader.Seek(1);
+			reader = new StringReader("a"); reader.Seek(1);
 			parser = Parse.Any();
 
 			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
@@ -49,10 +49,10 @@ namespace ParserLib.UnitTest
 		public void ShouldTryParse()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<string> result;
 
-			reader = new Reader("abc");
+			reader = new StringReader("abc");
 			parser = Parse.Any();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
@@ -67,10 +67,10 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParseWhenEOF()
 		{
 			IParser<string> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<string> result;
 
-			reader = new Reader("a"); reader.Seek(1);
+			reader = new StringReader("a"); reader.Seek(1);
 			parser = Parse.Any();
 
 			result = parser.TryParse(reader);

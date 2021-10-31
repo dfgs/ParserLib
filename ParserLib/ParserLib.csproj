@@ -56,7 +56,8 @@
     <Compile Include="ParseResult\ParseResult.cs" />
     <Compile Include="ParserExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reader.cs" />
+    <Compile Include="StreamReader.cs" />
+    <Compile Include="StringReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

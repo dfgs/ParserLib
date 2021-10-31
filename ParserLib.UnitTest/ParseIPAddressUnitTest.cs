@@ -11,9 +11,9 @@ namespace ParserLib.UnitTest
 		public void ShouldParse()
 		{
 			IParser<IPAddress> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("192.168.0.1");
+			reader = new StringReader("192.168.0.1");
 			parser = Parse.IPAddress();
 
 			Assert.AreEqual(IPAddress.Parse("192.168.0.1"), parser.Parse(reader));
@@ -23,9 +23,9 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParse()
 		{
 			IParser<IPAddress> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("192.256.0.1");
+			reader = new StringReader("192.256.0.1");
 			parser = Parse.IPAddress();
 
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
@@ -36,9 +36,9 @@ namespace ParserLib.UnitTest
 		public void ShouldNotParseWhenEOF()
 		{
 			IParser<IPAddress> parser;
-			Reader reader;
+			StringReader reader;
 
-			reader = new Reader("192");
+			reader = new StringReader("192");
 			parser = Parse.IPAddress();
 
 			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
@@ -50,10 +50,10 @@ namespace ParserLib.UnitTest
 		public void ShouldTryParse()
 		{
 			IParser<IPAddress> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<IPAddress> result;
 
-			reader = new Reader("192.168.0.1");
+			reader = new StringReader("192.168.0.1");
 			parser = Parse.IPAddress();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result.IsSuccess);
@@ -65,10 +65,10 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParse()
 		{
 			IParser<IPAddress> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<IPAddress> result;
 
-			reader = new Reader("192.256.0.1");
+			reader = new StringReader("192.256.0.1");
 			parser = Parse.IPAddress();
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result.IsSuccess);
@@ -81,10 +81,10 @@ namespace ParserLib.UnitTest
 		public void ShouldNotTryParseWhenEOF()
 		{
 			IParser<IPAddress> parser;
-			Reader reader;
+			StringReader reader;
 			IParseResult<IPAddress> result;
 
-			reader = new Reader("192."); reader.Seek(1);
+			reader = new StringReader("192."); reader.Seek(1);
 			parser = Parse.IPAddress();
 
 			result = parser.TryParse(reader);
