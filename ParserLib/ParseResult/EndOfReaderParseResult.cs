@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public class EndOfReaderParseResult<T> : FailedParseResult<T>
+	public class EndOfReaderParseResult<T> : FailedParseResult<T>, IEndOfReaderParseResult<T>
 	{
 	
 

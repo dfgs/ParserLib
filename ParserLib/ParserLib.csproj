@@ -50,6 +50,10 @@
     <Compile Include="Parser.cs" />
     <Compile Include="ParseResult\FailedParseResult.cs" />
     <Compile Include="ParseResult\EndOfReaderParseResult.cs" />
+    <Compile Include="ParseResult\ISucceededParseResult.cs" />
+    <Compile Include="ParseResult\IUnexpectedCharParseResult.cs" />
+    <Compile Include="ParseResult\IFailedParseResult.cs" />
+    <Compile Include="ParseResult\IEndOfReaderParseResult.cs" />
     <Compile Include="ParseResult\IParseResult.cs" />
     <Compile Include="ParseResult\UnexpectedCharParseResult.cs" />
     <Compile Include="ParseResult\SucceededParseResult.cs" />

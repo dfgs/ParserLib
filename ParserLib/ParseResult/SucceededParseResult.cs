@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public class SucceededParseResult<T>:ParseResult<T>
+	public class SucceededParseResult<T>:ParseResult<T>, ISucceededParseResult<T>
 	{
 		public override bool IsSuccess
 		{

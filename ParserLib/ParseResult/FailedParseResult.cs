@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public abstract class FailedParseResult<T> : ParseResult<T>
+	public abstract class FailedParseResult<T> : ParseResult<T>, IFailedParseResult<T>
 	{
 		public override bool IsSuccess
 		{

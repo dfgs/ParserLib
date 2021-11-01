@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public class UnexpectedCharParseResult<T> : FailedParseResult<T>
+	public class UnexpectedCharParseResult<T> : FailedParseResult<T>, IUnexpectedCharParseResult<T>
 	{
 		
 

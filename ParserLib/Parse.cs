@@ -189,9 +189,9 @@ namespace ParserLib
 				result = Parser.TryParse(reader);
 				switch (result)
 				{
-					case UnexpectedCharParseResult<T> failed:
+					case IUnexpectedCharParseResult<T> failed:
 						return ParseResult<IEnumerable<T>>.Failed(failed.Input);
-					case EndOfReaderParseResult<T> endOfReader:
+					case IEndOfReaderParseResult<T> endOfReader:
 						return ParseResult<IEnumerable<T>>.EndOfReader();
 				}
 
