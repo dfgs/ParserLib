@@ -8,7 +8,7 @@ namespace ParserLib
 {
 	public class UnexpectedCharException:ParseException	
 	{
-		public UnexpectedCharException(char Current) : base($"Unexpected char {Current}")
+		public UnexpectedCharException(char Current,long Position) : base($"Unexpected char {Current} at position {Position}")
 		{
 
 		}

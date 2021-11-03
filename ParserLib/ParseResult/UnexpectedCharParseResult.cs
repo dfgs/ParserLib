@@ -22,10 +22,16 @@ namespace ParserLib
 		{
 			get => input;
 		}
-		public UnexpectedCharParseResult(char Input)
+
+		private long position;
+		public long Position
 		{
-			this.input = Input;
-			this.exception = new UnexpectedCharException(Input);
+			get => position;
+		}
+		public UnexpectedCharParseResult(char Input,long Position)
+		{
+			this.input = Input;this.position = Position;
+			this.exception = new UnexpectedCharException(Input,Position);
 		}
 
 					

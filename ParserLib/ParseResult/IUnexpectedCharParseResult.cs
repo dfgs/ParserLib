@@ -13,7 +13,10 @@ namespace ParserLib
 			get;
 		}
 
-
+		long Position
+		{
+			get;
+		}
 
 
 

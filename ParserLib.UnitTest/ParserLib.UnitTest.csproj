@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ParseAnyInRangeUnitTest.cs" />
+    <Compile Include="ParseReaderIncludesUnitTest.cs" />
     <Compile Include="ParseStringUnitTest.cs" />
     <Compile Include="ParseIntUnitTest.cs" />
     <Compile Include="ParseByteUnitTest.cs" />

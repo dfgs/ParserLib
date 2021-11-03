@@ -18,7 +18,7 @@ namespace ParserLib
 			get;
 		}
 
-		bool Read(out char Result);
+		bool Read(out char Result,params char[] IncludeChars);
 
 		void Seek(long Position);
 	}

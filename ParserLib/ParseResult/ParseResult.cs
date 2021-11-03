@@ -23,9 +23,9 @@ namespace ParserLib
 			//if (Value == null) throw new ArgumentNullException(nameof(Value));
 			return new SucceededParseResult<T>(Value);
 		}
-		public static UnexpectedCharParseResult<T> Failed(char Input)
+		public static UnexpectedCharParseResult<T> Failed(char Input,long Position)
 		{
-			return new UnexpectedCharParseResult<T>(Input);
+			return new UnexpectedCharParseResult<T>(Input,Position);
 		}
 		public static EndOfReaderParseResult<T> EndOfReader()
 		{

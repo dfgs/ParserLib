@@ -76,7 +76,36 @@ namespace ParserLib.UnitTest
 			Assert.IsFalse(result);
 			Assert.IsTrue(reader.EOF);
 		}
+		[TestMethod]
+		public void ShouldNotIgnoreChars()
+		{
+			StringReader reader;
+			char value;
+			bool result;
 
+			reader = new StringReader("a b c ", ' ');
+
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('a', value);
+			result = reader.Read(out value, ' ');
+			Assert.IsTrue(result);
+			Assert.AreEqual(' ', value);
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('b', value);
+			result = reader.Read(out value, ' ');
+			Assert.IsTrue(result);
+			Assert.AreEqual(' ', value);
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('c', value);
+			result = reader.Read(out value, ' ');
+			Assert.IsTrue(result);
+			Assert.AreEqual(' ', value);
+
+			Assert.IsTrue(reader.EOF);
+		}
 		[TestMethod]
 		public void ShouldNotReadWhenEOF()
 		{

@@ -11,16 +11,16 @@ namespace ParserLib
 		#region Linq extensions
 		public static IParser<U> Select<T,U>(this IParser<T> Parser, Func<T,U> Selector)
 		{
-			ParserDelegate<U> parserDelegate= (reader) =>
+			ParserDelegate<U> parserDelegate= (reader, includedChars) =>
 			{
 				IParseResult<T> result;
-				result=Parser.TryParse(reader);
+				result=Parser.TryParse(reader, includedChars);
 				switch(result)
 				{
 					case ISucceededParseResult<T> succeeded:
 						return ParseResult<U>.Succeeded(Selector(result.Value));
 					case IUnexpectedCharParseResult<T> failed:
-						return ParseResult<U>.Failed(failed.Input);
+						return ParseResult<U>.Failed(failed.Input,failed.Position);
 					case IEndOfReaderParseResult<T> endOfReader:
 						return ParseResult<U>.EndOfReader();
 					default:throw new NotSupportedException($"Parse result of type {result.GetType().Name} is not supported");
@@ -47,20 +47,20 @@ namespace ParserLib
 			if (First == null) throw new ArgumentNullException(nameof(First));
 			if (second == null) throw new ArgumentNullException(nameof(second));
 
-			ParserDelegate<U> parserDelegate = (reader) => {
+			ParserDelegate<U> parserDelegate = (reader, includedChars) => {
 				IParseResult<T> result1;
 				IParseResult<U> result2;
 
-				result1 = First.TryParse(reader);
+				result1 = First.TryParse(reader, includedChars);
 				switch (result1)
 				{
 					case IUnexpectedCharParseResult<T> failed:
-						return ParseResult<U>.Failed(failed.Input);
+						return ParseResult<U>.Failed(failed.Input, failed.Position);
 					case IEndOfReaderParseResult<T> endOfReader:
 						return ParseResult<U>.EndOfReader();
 				}
 
-				result2 = second(result1.Value).TryParse(reader);
+				result2 = second(result1.Value).TryParse(reader, includedChars);
 				return result2;
 			};
 			return new Parser<U>(parserDelegate);
@@ -68,18 +68,18 @@ namespace ParserLib
 		}
 		
 
-		
+
 		#endregion
 
-		
 
 
-	
-		
-		
 
-	
-		
+
+
+
+
+
+
 
 
 

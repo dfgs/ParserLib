@@ -77,7 +77,36 @@ namespace ParserLib.UnitTest
 			Assert.IsFalse(result);
 			Assert.IsTrue(reader.EOF);
 		}
+		[TestMethod]
+		public void ShouldNotIgnoreChars()
+		{
+			StreamReader reader;
+			char value;
+			bool result;
 
+			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("a b c ")), ' ');
+
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('a', value);
+			result = reader.Read(out value, ' ');
+			Assert.IsTrue(result);
+			Assert.AreEqual(' ', value);
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('b', value);
+			result = reader.Read(out value, ' ');
+			Assert.IsTrue(result);
+			Assert.AreEqual(' ', value);
+			result = reader.Read(out value);
+			Assert.IsTrue(result);
+			Assert.AreEqual('c', value);
+			result = reader.Read(out value, ' ');
+			Assert.IsTrue(result);
+			Assert.AreEqual(' ', value);
+
+			Assert.IsTrue(reader.EOF);
+		}
 		[TestMethod]
 		public void ShouldNotReadWhenEOF()
 		{
@@ -97,7 +126,7 @@ namespace ParserLib.UnitTest
 		{
 			StreamReader reader;
 
-			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("abc")));
+			reader = new StreamReader(new System.IO.MemoryStream(Encoding.Default.GetBytes("abc")) );
 			reader.Seek(1);
 			Assert.AreEqual(1, reader.Position);
 			Assert.IsFalse(reader.EOF);

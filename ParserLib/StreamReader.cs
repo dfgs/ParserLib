@@ -25,7 +25,7 @@ namespace ParserLib
 		}
 			
 
-		public bool Read(out char Value)
+		public bool Read(out char Value, params char[] IncludeChars)
 		{
 			Value=(char)0;
 
@@ -33,6 +33,7 @@ namespace ParserLib
 			{
 				if (EOF) return false;
 				Value = (char)stream.ReadByte();
+				if (IncludeChars.Contains(Value)) return true;
 				if (ignoredChars.Contains(Value)) continue;
 				return true;
 			}

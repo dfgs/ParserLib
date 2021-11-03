@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-    public delegate IParseResult<T> ParserDelegate<T>(IReader Reader);
+    public delegate IParseResult<T> ParserDelegate<T>(IReader Reader,char[] IncludedChars);
 
-    public interface IParser<out T> 
-    {
+	public interface IParser<out T>
+	{
 
-		T Parse(string Value,params char[] IgnoredChars);
+		T Parse(string Value, params char[] IgnoredChars);
 
-		T Parse(IReader Reader);
+		T Parse(IReader Reader, params char[] IncludedChars);
 
 		IParseResult<T> TryParse(string Value, params char[] IgnoredChars);
 
-		IParseResult<T> TryParse(IReader Reader);
+		IParseResult<T> TryParse(IReader Reader, params char[] IncludedChars);
 
 	}
 
