@@ -41,7 +41,7 @@ namespace ParserLib
 
 		public void Seek(long Position)
 		{
-			if (Position >= stream.Position) throw new IOException();
+			if (Position > stream.Length) throw new IOException();
 			stream.Seek(Position, SeekOrigin.Begin);
 		}
 
