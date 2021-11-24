@@ -16,7 +16,7 @@ namespace ParserLib
 				char input;
 				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader();
 				if (input == Value) return ParseResult<string>.Succeeded(input.ToString());
-				else return ParseResult<string>.Failed(input,reader.Position);
+				else return ParseResult<string>.Failed(input,reader.Position-1);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -32,7 +32,7 @@ namespace ParserLib
 				{
 					if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader();
 					if (input == value) continue;
-					else return ParseResult<string>.Failed(input, reader.Position);
+					else return ParseResult<string>.Failed(input, reader.Position-1);
 
 				}
 				
@@ -56,7 +56,7 @@ namespace ParserLib
 				char input;
 				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader();
 				if (Values.Contains(input)) return ParseResult<string>.Succeeded(input.ToString());
-				else return ParseResult<string>.Failed(input, reader.Position);
+				else return ParseResult<string>.Failed(input, reader.Position-1);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -66,7 +66,7 @@ namespace ParserLib
 				char input;
 				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader();
 				if ((input>=First) && (input <= Last)) return ParseResult<string>.Succeeded(input.ToString());
-				else return ParseResult<string>.Failed(input, reader.Position);
+				else return ParseResult<string>.Failed(input, reader.Position-1);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -76,7 +76,7 @@ namespace ParserLib
 				char input;
 				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader();
 				if (!Values.Contains(input)) return ParseResult<string>.Succeeded(input.ToString());
-				else return ParseResult<string>.Failed(input, reader.Position);
+				else return ParseResult<string>.Failed(input, reader.Position-1);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -101,7 +101,7 @@ namespace ParserLib
 					case '9': return ParseResult<byte>.Succeeded((byte)9);
 				}
 
-				return ParseResult<byte>.Failed(input,reader.Position);
+				return ParseResult<byte>.Failed(input,reader.Position-1);
 			};
 			return new Parser<byte>(parserDelegate);
 		}
