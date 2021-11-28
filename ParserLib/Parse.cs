@@ -149,13 +149,28 @@ namespace ParserLib
 			if (B == null) throw new ArgumentNullException(nameof(B));
 			ParserDelegate<T> parseDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult<T> resultA,resultB;
+				IUnexpectedCharParseResult<T> unexpectedCharParseResultA, unexpectedCharParseResultB;
 
-				result = A.TryParse(reader, includedChars);
-				if (result.IsSuccess) return result;
-				result = B.TryParse(reader, includedChars);
+				resultA = A.TryParse(reader, includedChars);
+				if (resultA.IsSuccess) return resultA;
+				resultB = B.TryParse(reader, includedChars);
+				if (resultB.IsSuccess) return resultB;
 
-				return result;
+				unexpectedCharParseResultA = resultA as IUnexpectedCharParseResult<T>;
+				unexpectedCharParseResultB = resultB as IUnexpectedCharParseResult<T>;
+				
+				if (unexpectedCharParseResultA==null)
+				{
+					return unexpectedCharParseResultB;
+				}
+				else
+				{
+					if (unexpectedCharParseResultB == null) return unexpectedCharParseResultA;
+					if (unexpectedCharParseResultA.Position > unexpectedCharParseResultB.Position) return unexpectedCharParseResultA;
+					else return unexpectedCharParseResultB;
+				}
+
 			};
 			return new Parser<T>(parseDelegate);
 		}
