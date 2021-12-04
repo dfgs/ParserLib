@@ -162,7 +162,7 @@ namespace ParserLib
 				
 				if (unexpectedCharParseResultA==null)
 				{
-					return unexpectedCharParseResultB;
+					return resultB;
 				}
 				else
 				{

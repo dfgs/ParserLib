@@ -120,5 +120,35 @@ namespace ParserLib.UnitTest
 			Assert.AreEqual(1, reader.Position);
 		}
 
+
+		[TestMethod]
+		public void ShouldReturnHigherErrorPos()
+		{
+			IParser<string> a, b, parser;
+			StringReader reader;
+			IParseResult<string> result;
+
+			a = Parse.Char('a').Then(Parse.Char('a')).Then(Parse.Char('a'));
+			b = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+
+			parser = a.Or(b);
+			reader = new StringReader("aae");
+			result = parser.TryParse(reader);
+			Assert.IsFalse(result.IsSuccess);
+			Assert.AreEqual(null, result.Value);
+			Assert.AreEqual(2, ((UnexpectedCharParseResult<string>)result).Position);
+
+
+			parser = b.Or(a);
+			reader = new StringReader("aae");
+			result = parser.TryParse(reader);
+			Assert.IsFalse(result.IsSuccess);
+			Assert.AreEqual(null, result.Value);
+			Assert.AreEqual(2, ((UnexpectedCharParseResult<string>)result).Position);
+		}
+
+
+
+
 	}
 }
