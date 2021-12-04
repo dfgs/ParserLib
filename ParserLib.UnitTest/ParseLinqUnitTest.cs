@@ -58,7 +58,27 @@ namespace ParserLib.UnitTest
 			Assert.AreEqual("a", result.Item1);
 			Assert.AreEqual(111, result.Item2);
 		}
+		[TestMethod]
+		public void ShouldReturnHigherErrorPos()
+		{
+			IParser<string> parser;
+			StringReader reader;
+			IParseResult<string> result;
 
+			parser =
+				from _a in Parse.String("Item")
+				from _b in Parse.Char('(')
+				from _c in (Parse.Char('a').Or(Parse.Char('b'))).ZeroOrMoreTimes()
+				from _d in Parse.Char(')')
+				select _c;
+
+			reader = new StringReader("Item(abac)");
+			result = parser.TryParse(reader);
+			Assert.IsFalse(result.IsSuccess);
+			Assert.AreEqual(null, result.Value);
+			Assert.AreEqual(8, ((UnexpectedCharParseResult<string>)result).Position);
+
+		}
 
 	}
 

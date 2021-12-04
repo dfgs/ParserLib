@@ -149,12 +149,12 @@ namespace ParserLib.UnitTest
 			StringReader reader;
 			IParseResult<string> result;
 
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).OneOrMoreTimes();
-			reader = new StringReader("abe");
+			parser = Parse.Char('a').OneOrMoreTimes().Then(Parse.Char('b'));
+			reader = new StringReader("aaac");
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result.IsSuccess);
 			Assert.AreEqual(null, result.Value);
-			Assert.AreEqual(2, ((UnexpectedCharParseResult<string>)result).Position);
+			Assert.AreEqual(3, ((UnexpectedCharParseResult<string>)result).Position);
 
 		}
 

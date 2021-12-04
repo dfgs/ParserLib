@@ -41,11 +41,11 @@ namespace ParserLib
 			return Parser.Then(t => Selector(t).Select(u => Projector(t, u)));
 		}
 
-		public static IParser<U> Then<T, U>(this IParser<T> First, Func<T, IParser<U>> second)
+		public static IParser<U> Then<T, U>(this IParser<T> First, Func<T, IParser<U>> Second)
 		{
 
 			if (First == null) throw new ArgumentNullException(nameof(First));
-			if (second == null) throw new ArgumentNullException(nameof(second));
+			if (Second == null) throw new ArgumentNullException(nameof(Second));
 
 			ParserDelegate<U> parserDelegate = (reader, includedChars) => {
 				IParseResult<T> result1;
@@ -60,7 +60,7 @@ namespace ParserLib
 						return ParseResult<U>.EndOfReader();
 				}
 
-				result2 = second(result1.Value).TryParse(reader, includedChars);
+				result2 = Second(result1.Value).TryParse(reader, includedChars);
 				return result2;
 			};
 			return new Parser<U>(parserDelegate);
