@@ -20,7 +20,7 @@ namespace ParserLib
 		}
 
 		
-		public SucceededParseResult(T Value)
+		public SucceededParseResult(long Position,T Value):base(Position)
 		{
 			this.value = Value;
 		}

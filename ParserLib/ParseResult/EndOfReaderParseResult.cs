@@ -16,7 +16,7 @@ namespace ParserLib
 			get => exception;
 		}
 
-		public EndOfReaderParseResult()
+		public EndOfReaderParseResult(long Position):base(Position)
 		{
 			this.exception = new EndOfReaderException();
 		}

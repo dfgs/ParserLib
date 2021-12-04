@@ -18,11 +18,11 @@ namespace ParserLib
 				switch(result)
 				{
 					case ISucceededParseResult<T> succeeded:
-						return ParseResult<U>.Succeeded(Selector(result.Value));
+						return ParseResult<U>.Succeeded(result.Position, Selector(result.Value));
 					case IUnexpectedCharParseResult<T> failed:
-						return ParseResult<U>.Failed(failed.Input,failed.Position);
+						return ParseResult<U>.Failed(failed.Position,failed.Input);
 					case IEndOfReaderParseResult<T> endOfReader:
-						return ParseResult<U>.EndOfReader();
+						return ParseResult<U>.EndOfReader(endOfReader.Position);
 					default:throw new NotSupportedException($"Parse result of type {result.GetType().Name} is not supported");
 				}
 				
@@ -55,9 +55,9 @@ namespace ParserLib
 				switch (result1)
 				{
 					case IUnexpectedCharParseResult<T> failed:
-						return ParseResult<U>.Failed(failed.Input, failed.Position);
+						return ParseResult<U>.Failed(failed.Position,failed.Input);
 					case IEndOfReaderParseResult<T> endOfReader:
-						return ParseResult<U>.EndOfReader();
+						return ParseResult<U>.EndOfReader(endOfReader.Position);
 				}
 
 				result2 = Second(result1.Value).TryParse(reader, includedChars);

@@ -20,7 +20,7 @@ namespace ParserLib
 			get;
 		}
 
-		public FailedParseResult()
+		public FailedParseResult(long Position):base(Position)
 		{
 		}
 

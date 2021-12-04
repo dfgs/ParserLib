@@ -10,7 +10,6 @@ namespace ParserLib
 	{
 		
 
-
 		private Exception exception;
 		public override Exception Exception
 		{
@@ -23,14 +22,10 @@ namespace ParserLib
 			get => input;
 		}
 
-		private long position;
-		public long Position
+		
+		public UnexpectedCharParseResult(long Position,char Input):base(Position)
 		{
-			get => position;
-		}
-		public UnexpectedCharParseResult(char Input,long Position)
-		{
-			this.input = Input;this.position = Position;
+			this.input = Input;
 			this.exception = new UnexpectedCharException(Input,Position);
 		}
 

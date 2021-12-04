@@ -12,24 +12,32 @@ namespace ParserLib
 		{
 			get;
 		}
-	
+		private long position;
+		public long Position
+		{
+			get => position;
+		}
 		public abstract T Value
 		{
 			get;
 		}
-				
-		public static SucceededParseResult<T> Succeeded(T Value)
+			
+		public ParseResult(long Position)
+		{
+			this.position = Position;
+		}
+		public static SucceededParseResult<T> Succeeded(long Position,T Value)
 		{
 			//if (Value == null) throw new ArgumentNullException(nameof(Value));
-			return new SucceededParseResult<T>(Value);
+			return new SucceededParseResult<T>(Position,Value);
 		}
-		public static UnexpectedCharParseResult<T> Failed(char Input,long Position)
+		public static UnexpectedCharParseResult<T> Failed(long Position, char Input)
 		{
-			return new UnexpectedCharParseResult<T>(Input,Position);
+			return new UnexpectedCharParseResult<T>(Position,Input);
 		}
-		public static EndOfReaderParseResult<T> EndOfReader()
+		public static EndOfReaderParseResult<T> EndOfReader(long Position)
 		{
-			return new EndOfReaderParseResult<T>();
+			return new EndOfReaderParseResult<T>(Position);
 		}
 		
 		
