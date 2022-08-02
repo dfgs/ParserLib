@@ -24,32 +24,34 @@ namespace ParserLib
 		}
 		public T Parse(IReader Reader, params char[] IncludedChars)
 		{
-			IParseResult<T> result;
+			IParseResult result;
 			long position;
 
 			if (Reader == null) throw new ArgumentNullException(nameof(Reader));
 
 			position = Reader.Position;
 			result = parserDelegate(Reader,IncludedChars);
-			if (result.IsSuccess) return result.Value;
+			
+			if (result is ISucceededParseResult<T> success) return success.Value;
+
 			Reader.Seek(position);
-			throw ((IFailedParseResult<T>)result).Exception;
+			throw ((IFailedParseResult)result).Exception;
 		}
-		public IParseResult<T> TryParse(string Value, params char[] IgnoredChars)
+		public IParseResult TryParse(string Value, params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
 			return TryParse(new StringReader(Value,IgnoredChars));
 		}
-		public IParseResult<T> TryParse(IReader Reader, params char[] IncludedChars)
+		public IParseResult TryParse(IReader Reader, params char[] IncludedChars)
 		{
-			IParseResult<T> result;
+			IParseResult result;
 			long position;
 
 			if (Reader == null) throw new ArgumentNullException(nameof(Reader));
 
 			position = Reader.Position;
 			result = parserDelegate(Reader, IncludedChars);
-			if (!result.IsSuccess) Reader.Seek(position);
+			if (!(result is ISucceededParseResult<T>)) Reader.Seek(position);
 
 			return result;
 		}

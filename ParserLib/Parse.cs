@@ -17,9 +17,9 @@ namespace ParserLib
 				long position;
 
 				position=reader.Position; 
-				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader(position);
-				if (input == Value) return ParseResult<string>.Succeeded(position,input.ToString());
-				else return ParseResult<string>.Failed(position,input);
+				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
+				if (input == Value) return ParseResult.Succeeded(position,input.ToString());
+				else return ParseResult.Failed(position,input);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -36,13 +36,13 @@ namespace ParserLib
 				foreach (char value in Value)
 				{
 					position= reader.Position; 
-					if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader(position);
+					if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
 					if (input == value) continue;
-					else return ParseResult<string>.Failed(position,input);
+					else return ParseResult.Failed(position,input);
 
 				}
 				
-				return ParseResult<string>.Succeeded(reader.Position - 1,Value);
+				return ParseResult.Succeeded(reader.Position - 1,Value);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -53,8 +53,8 @@ namespace ParserLib
 				long position;
 
 				position = reader.Position;
-				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader(position);
-				return ParseResult<string>.Succeeded(position, input.ToString());
+				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
+				return ParseResult.Succeeded(position, input.ToString());
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -66,9 +66,9 @@ namespace ParserLib
 				long position;
 
 				position = reader.Position;
-				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader(position);
-				if (Values.Contains(input)) return ParseResult<string>.Succeeded(position,input.ToString());
-				else return ParseResult<string>.Failed(position,input);
+				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
+				if (Values.Contains(input)) return ParseResult.Succeeded(position,input.ToString());
+				else return ParseResult.Failed(position,input);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -79,9 +79,9 @@ namespace ParserLib
 				long position;
 
 				position = reader.Position;
-				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader(position);
-				if ((input>=First) && (input <= Last)) return ParseResult<string>.Succeeded(position,input.ToString());
-				else return ParseResult<string>.Failed(position,input);
+				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
+				if ((input>=First) && (input <= Last)) return ParseResult.Succeeded(position,input.ToString());
+				else return ParseResult.Failed(position,input);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -92,9 +92,9 @@ namespace ParserLib
 				long position;
 
 				position = reader.Position;
-				if (!reader.Read(out input,includedChars)) return ParseResult<string>.EndOfReader(position);
-				if (!Values.Contains(input)) return ParseResult<string>.Succeeded(position,input.ToString());
-				else return ParseResult<string>.Failed(position,input);
+				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
+				if (!Values.Contains(input)) return ParseResult.Succeeded(position,input.ToString());
+				else return ParseResult.Failed(position,input);
 			};
 			return new Parser<string>(parserDelegate);
 		}
@@ -107,22 +107,22 @@ namespace ParserLib
 				long position;
 
 				position = reader.Position;
-				if (!reader.Read(out input,includedChars)) return ParseResult<byte>.EndOfReader(position);
+				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
 				switch (input)
 				{
-					case '0': return ParseResult<byte>.Succeeded(position,(byte)0);
-					case '1': return ParseResult<byte>.Succeeded(position,(byte)1);
-					case '2': return ParseResult<byte>.Succeeded(position, (byte)2);
-					case '3': return ParseResult<byte>.Succeeded(position, (byte)3);
-					case '4': return ParseResult<byte>.Succeeded(position, (byte)4);
-					case '5': return ParseResult<byte>.Succeeded(position, (byte)5);
-					case '6': return ParseResult<byte>.Succeeded(position, (byte)6);
-					case '7': return ParseResult<byte>.Succeeded(position, (byte)7);
-					case '8': return ParseResult<byte>.Succeeded(position, (byte)8);
-					case '9': return ParseResult<byte>.Succeeded(position, (byte)9);
+					case '0': return ParseResult.Succeeded(position,(byte)0);
+					case '1': return ParseResult.Succeeded(position,(byte)1);
+					case '2': return ParseResult.Succeeded(position, (byte)2);
+					case '3': return ParseResult.Succeeded(position, (byte)3);
+					case '4': return ParseResult.Succeeded(position, (byte)4);
+					case '5': return ParseResult.Succeeded(position, (byte)5);
+					case '6': return ParseResult.Succeeded(position, (byte)6);
+					case '7': return ParseResult.Succeeded(position, (byte)7);
+					case '8': return ParseResult.Succeeded(position, (byte)8);
+					case '9': return ParseResult.Succeeded(position, (byte)9);
 				}
 
-				return ParseResult<byte>.Failed(position, input);
+				return ParseResult.Failed(position, input);
 			};
 			return new Parser<byte>(parserDelegate);
 		}
@@ -170,12 +170,14 @@ namespace ParserLib
 			if (B == null) throw new ArgumentNullException(nameof(B));
 			ParserDelegate<T> parseDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> resultA,resultB;
+				IParseResult resultA,resultB;
 
 				resultA = A.TryParse(reader, includedChars);
-				if (resultA.IsSuccess) return resultA;
+				if (resultA is ISucceededParseResult<T>) return resultA;
+
+
 				resultB = B.TryParse(reader, includedChars);
-				if (resultB.IsSuccess) return resultB;
+				if (resultB is ISucceededParseResult<T>) return resultB;
 
 				if (resultA.Position > resultB.Position) return resultA;
 				else return resultB;
@@ -189,7 +191,7 @@ namespace ParserLib
 			if (A == null) throw new ArgumentNullException(nameof(A));
 			ParserDelegate<T> parseDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult result;
 
 				result = A.TryParse(reader, includedChars.Union(IncludedChars).ToArray());
 				return result;
@@ -203,47 +205,59 @@ namespace ParserLib
 			if (B == null) throw new ArgumentNullException(nameof(B));
 			ParserDelegate<string> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<string> result1;
-				IParseResult<string> result2;
+				IParseResult result1;
+				IParseResult result2;
+				ISucceededParseResult<string> success1,success2;
 
 				result1 = A.TryParse(reader, includedChars);
-				if (!result1.IsSuccess) return result1;
+				success1 = result1 as ISucceededParseResult<string>;
+				if (success1==null) return result1;
+				
 				result2 = B.TryParse(reader, includedChars);
-				if (!result2.IsSuccess) return result2;
+				success2 = result2 as ISucceededParseResult<string>;
+				if (success2 == null) return result2;
 
-				return ParseResult<string>.Succeeded(result1.Position,result1.Value + result2.Value) ;
+				return ParseResult.Succeeded(result1.Position,success1.Value + success2.Value) ;
 			};
 			return new Parser<string>(parserDelegate);
 		}
+		
+
 		public static IParser<IEnumerable<T>> OneOrMoreTimes<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<IEnumerable<T>> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult result;
 				List<T> items;
 				long position;
+
+				items = new List<T>();
 
 				position = reader.Position;
 				result = Parser.TryParse(reader, includedChars);
 				switch (result)
 				{
-					case IUnexpectedCharParseResult<T> failed:
-						return ParseResult<IEnumerable<T>>.Failed(failed.Position,failed.Input);
-					case IEndOfReaderParseResult<T> endOfReader:
-						return ParseResult<IEnumerable<T>>.EndOfReader(endOfReader.Position);
+					case ISucceededParseResult<T> success:
+						items.Add(success.Value);
+						break;
+					default:return result;
 				}
 
-				items = new List<T>();
-				items.Add(result.Value);
 				while (!reader.EOF)
 				{
 					result = Parser.TryParse(reader, includedChars);
-					if (!result.IsSuccess) break;
-					items.Add(result.Value);
+					switch (result)
+					{
+						case ISucceededParseResult<T> success:
+							items.Add(success.Value);
+							break;
+						default:
+							return ParseResult.Succeeded<IEnumerable<T>>(position, items);
+					}
 				}
 
-				return ParseResult<IEnumerable<T>>.Succeeded(position,items);
+				return ParseResult.Succeeded<IEnumerable<T>>(position,items);
 			};
 			return new Parser<IEnumerable<T>>(parserDelegate);
 		}
@@ -253,24 +267,37 @@ namespace ParserLib
 			if (Func == null) throw new ArgumentNullException(nameof(Func));
 			ParserDelegate<T> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult result;
 				List<T> items;
 				long position;
 
-				position=reader.Position;
-				result = Parser.TryParse(reader, includedChars);
-				if (!result.IsSuccess) return result;
-
 				items = new List<T>();
-				items.Add(result.Value);
+
+				position = reader.Position;
+				result = Parser.TryParse(reader, includedChars);
+				switch (result)
+				{
+					
+					case ISucceededParseResult<T> success:
+						items.Add(success.Value);
+						break;
+					default:return result;
+				}
+
 				while (!reader.EOF)
 				{
 					result = Parser.TryParse(reader, includedChars);
-					if (!result.IsSuccess) break;
-					items.Add(result.Value);
+					switch (result)
+					{
+						case ISucceededParseResult<T> success:
+							items.Add(success.Value);
+							break;
+						default:
+							return ParseResult.Succeeded<T>(position, Func(items));
+					}
 				}
 
-				return ParseResult<T>.Succeeded(position,Func(items));
+				return ParseResult.Succeeded<T>(position,Func(items));
 			};
 			return new Parser<T>(parserDelegate);
 		}
@@ -283,24 +310,37 @@ namespace ParserLib
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<IEnumerable<T>> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult result;
 				List<T> items;
 				long position;
 
-				position=reader.Position;	
-				result = Parser.TryParse(reader, includedChars);
-				if (!result.IsSuccess) return ParseResult<IEnumerable<T>>.Succeeded(position,Enumerable.Empty<T>());
-
 				items = new List<T>();
-				items.Add(result.Value);
+
+				position = reader.Position;	
+				result = Parser.TryParse(reader, includedChars);
+				switch (result)
+				{
+					case ISucceededParseResult<T> success:
+						items.Add(success.Value);
+						break;
+					default:
+						return ParseResult.Succeeded(position, Enumerable.Empty<T>());
+				}
+
 				while (!reader.EOF)
 				{
 					result = Parser.TryParse(reader, includedChars);
-					if (!result.IsSuccess) break;
-					items.Add(result.Value);
+					switch (result)
+					{
+						case ISucceededParseResult<T> success:
+							items.Add(success.Value);
+							break;
+						default:
+							return ParseResult.Succeeded(position, items);
+					}
 				}
 
-				return ParseResult<IEnumerable<T>>.Succeeded(position,items);
+				return ParseResult.Succeeded(position,items);
 			};
 			return new Parser<IEnumerable<T>>(parserDelegate);
 
@@ -311,25 +351,38 @@ namespace ParserLib
 			if (Func == null) throw new ArgumentNullException(nameof(Func));
 			ParserDelegate<T> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult result;
 				List<T> items;
 				long position;
 
 
-				position=reader.Position;
-				result = Parser.TryParse(reader, includedChars);
-				if (!result.IsSuccess) return ParseResult<T>.Succeeded(position,default(T)); ;
-
 				items = new List<T>();
-				items.Add(result.Value);
+
+				position = reader.Position;
+				result = Parser.TryParse(reader, includedChars);
+				switch (result)
+				{
+					case ISucceededParseResult<T> success:
+						items.Add(success.Value);
+						break;
+					default:
+						return ParseResult.Succeeded(position, default(T)); ;
+				}
+
 				while (!reader.EOF)
 				{
 					result = Parser.TryParse(reader, includedChars);
-					if (!result.IsSuccess) break;
-					items.Add(result.Value);
+					switch (result)
+					{
+						case ISucceededParseResult<T> success:
+							items.Add(success.Value);
+							break;
+						default:
+							return ParseResult.Succeeded(position, Func(items));
+					}
 				}
 
-				return ParseResult<T>.Succeeded(position, Func(items));
+				return ParseResult.Succeeded(position, Func(items));
 			};
 			return new Parser<T>(parserDelegate);
 		}
@@ -343,14 +396,19 @@ namespace ParserLib
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<T> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult result;
 				long position;
 
 				position = reader.Position;
 				result = Parser.TryParse(reader, includedChars);
-				if (result.IsSuccess) return result;
 
-				return ParseResult<T>.Succeeded(position,default(T));
+				switch (result)
+				{
+					case ISucceededParseResult<T> success: return result;
+					default:
+						return ParseResult.Succeeded(position, default(T)); ;
+				}
+				
 			};
 			return new Parser<T>(parserDelegate);
 

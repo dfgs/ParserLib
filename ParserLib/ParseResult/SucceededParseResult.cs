@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public class SucceededParseResult<T>:ParseResult<T>, ISucceededParseResult<T>
+	public class SucceededParseResult<T>:ParseResult, ISucceededParseResult<T>
 	{
-		public override bool IsSuccess
+		/*public override bool IsSuccess
 		{
 			get => true;
-		}
+		}//*/
 		
 		private T value;
-		public override T Value
+		public T Value
 		{
 			get => value;
 		}
@@ -25,10 +25,10 @@ namespace ParserLib
 			this.value = Value;
 		}
 
+
 		
 
-				
-		
+
 
 	}
 }

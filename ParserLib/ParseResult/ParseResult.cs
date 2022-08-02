@@ -6,42 +6,36 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public abstract class ParseResult<T> :IParseResult<T>
+	public abstract class ParseResult :IParseResult
 	{
-		public abstract bool IsSuccess
+		/*public abstract bool IsSuccess
 		{
 			get;
-		}
+		}*/
 		private long position;
 		public long Position
 		{
 			get => position;
 		}
-		public abstract T Value
-		{
-			get;
-		}
+		
 			
 		public ParseResult(long Position)
 		{
 			this.position = Position;
 		}
-		public static SucceededParseResult<T> Succeeded(long Position,T Value)
+		public static SucceededParseResult<T> Succeeded<T>(long Position,T Value)
 		{
 			//if (Value == null) throw new ArgumentNullException(nameof(Value));
 			return new SucceededParseResult<T>(Position,Value);
 		}
-		public static UnexpectedCharParseResult<T> Failed(long Position, char Input)
+		public static UnexpectedCharParseResult Failed(long Position, char Input)
 		{
-			return new UnexpectedCharParseResult<T>(Position,Input);
+			return new UnexpectedCharParseResult(Position,Input);
 		}
-		public static EndOfReaderParseResult<T> EndOfReader(long Position)
+		public static EndOfReaderParseResult EndOfReader(long Position)
 		{
-			return new EndOfReaderParseResult<T>(Position);
+			return new EndOfReaderParseResult(Position);
 		}
-		
-		
-
 
 	}
 }

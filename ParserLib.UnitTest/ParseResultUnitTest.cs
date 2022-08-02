@@ -21,7 +21,7 @@ namespace ParserLib.UnitTest
 			Assert.IsFalse(reader.EOF);
 			result=ParseResult<char>.Succeeded(reader);
 			Assert.IsTrue(result.Success);
-			Assert.AreEqual('a', result.Value);
+			Assert.AreEqual('a', ((ISucceededParseResult<string>)result).Value);
 			Assert.IsTrue(reader.EOF);
 		}
 		[TestMethod]
@@ -34,7 +34,7 @@ namespace ParserLib.UnitTest
 			Assert.IsFalse(reader.EOF);
 			result = ParseResult<char>.Failed(reader);
 			Assert.IsFalse(result.Success);
-			Assert.AreEqual('a', result.Value);
+			Assert.AreEqual('a', ((ISucceededParseResult<string>)result).Value);
 			Assert.IsFalse(reader.EOF);
 		}*/
 

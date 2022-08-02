@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public interface ISucceededParseResult<out T> :IParseResult<T>
+	public interface ISucceededParseResult : IParseResult
 	{
-		
-				
-	
-		
-		
+	}
+
+	public interface ISucceededParseResult<out T> : ISucceededParseResult
+	{
+		T Value
+		{
+			get;
+		}
+
+
+
+
 
 
 	}

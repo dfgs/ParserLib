@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public abstract class FailedParseResult<T> : ParseResult<T>, IFailedParseResult<T>
+	public abstract class FailedParseResult : ParseResult, IFailedParseResult
 	{
-		public override bool IsSuccess
+		/*public override bool IsSuccess
 		{
 			get => false;
-		}
+		}//*/
 
-		public override T Value => default(T);
+		//public override T? Value => default(T);
 
 		public abstract Exception Exception
 		{

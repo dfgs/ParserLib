@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public interface IFailedParseResult<out T> :IParseResult<T>
+	public interface IFailedParseResult :IParseResult
 	{
 		Exception Exception
 		{

@@ -70,32 +70,32 @@ namespace ParserLib.UnitTest
 		{
 			IParser<byte> parser;
 			StringReader reader;
-			IParseResult<byte> result;
+			IParseResult result;
 
 			parser = Parse.Byte();
 
 			reader = new StringReader("255");
 			result = parser.TryParse(reader);
-			Assert.IsTrue(result.IsSuccess);
-			Assert.AreEqual(255, result.Value);
+			Assert.IsTrue(result is ISucceededParseResult);
+			Assert.AreEqual(255, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(3, reader.Position);
 
 			reader = new StringReader("199");
 			result = parser.TryParse(reader);
-			Assert.IsTrue(result.IsSuccess);
-			Assert.AreEqual(199, result.Value);
+			Assert.IsTrue(result is ISucceededParseResult);
+			Assert.AreEqual(199, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(3, reader.Position);
 
 			reader = new StringReader("99");
 			result = parser.TryParse(reader);
-			Assert.IsTrue(result.IsSuccess);
-			Assert.AreEqual(99, result.Value);
+			Assert.IsTrue(result is ISucceededParseResult);
+			Assert.AreEqual(99, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(2, reader.Position);
 
 			reader = new StringReader("0");
 			result = parser.TryParse(reader);
-			Assert.IsTrue(result.IsSuccess);
-			Assert.AreEqual(0, result.Value);
+			Assert.IsTrue(result is ISucceededParseResult);
+			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position);
 		}
 
@@ -104,26 +104,26 @@ namespace ParserLib.UnitTest
 		{
 			IParser<byte> parser;
 			StringReader reader;
-			IParseResult<byte> result;
+			IParseResult result;
 
 			parser = Parse.Byte();
 
 			reader = new StringReader("256");
 			result = parser.TryParse(reader);
-			Assert.IsTrue(result.IsSuccess);
-			Assert.AreEqual(25, result.Value);
+			Assert.IsTrue(result is ISucceededParseResult);
+			Assert.AreEqual(25, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(2, reader.Position);
 
 			reader = new StringReader("300");
 			result = parser.TryParse(reader);
-			Assert.IsTrue(result.IsSuccess);
-			Assert.AreEqual(30, result.Value);
+			Assert.IsTrue(result is ISucceededParseResult);
+			Assert.AreEqual(30, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(2, reader.Position);
 
 			reader = new StringReader("abc");
 			result = parser.TryParse(reader);
-			Assert.IsFalse(result.IsSuccess);
-			Assert.AreEqual(0, result.Value);
+			Assert.IsFalse(result is ISucceededParseResult);
+			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -133,14 +133,14 @@ namespace ParserLib.UnitTest
 		{
 			IParser<byte> parser;
 			StringReader reader;
-			IParseResult<byte> result;
+			IParseResult result;
 
 			parser = Parse.Byte();
 
 			reader = new StringReader("a"); reader.Seek(1);
 			result = parser.TryParse(reader);
-			Assert.IsFalse(result.IsSuccess);
-			Assert.AreEqual(0, result.Value);
+			Assert.IsFalse(result is ISucceededParseResult);
+			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position); 
 		}
 		

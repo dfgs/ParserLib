@@ -6,23 +6,20 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public interface IParseResult<out T> 
+	public interface IParseResult
 	{
-		bool IsSuccess
+		/*bool IsSuccess
 		{
 			get;
-		}
+		}*/
 	
-		T Value
-		{
-			get;
-		}
+		
 				
 		long Position
 		{
 			get;
 		}
-		
+
 		
 
 

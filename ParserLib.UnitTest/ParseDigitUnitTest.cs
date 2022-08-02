@@ -53,7 +53,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<byte> parser;
 			StringReader reader;
-			IParseResult<byte> result;
+			IParseResult result;
 
 			reader = new StringReader("0123456789");
 			parser = Parse.Digit();
@@ -61,8 +61,8 @@ namespace ParserLib.UnitTest
 			for (byte t = 0; t < 10; t++)
 			{
 				result = parser.TryParse(reader);
-				Assert.IsTrue(result.IsSuccess);
-				Assert.AreEqual(t, result.Value);
+				Assert.IsTrue(result is ISucceededParseResult);
+				Assert.AreEqual(t, ((ISucceededParseResult<string>)result).Value);
 				Assert.AreEqual(t+1, reader.Position);
 			}
 		}
@@ -72,13 +72,13 @@ namespace ParserLib.UnitTest
 		{
 			IParser<byte> parser;
 			StringReader reader;
-			IParseResult<byte> result;
+			IParseResult result;
 
 			reader = new StringReader("abc");
 			parser = Parse.Digit();
 			result = parser.TryParse(reader);
-			Assert.IsFalse(result.IsSuccess);
-			Assert.AreEqual(0, result.Value);
+			Assert.IsFalse(result is ISucceededParseResult);
+			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -88,14 +88,14 @@ namespace ParserLib.UnitTest
 		{
 			IParser<byte> parser;
 			StringReader reader;
-			IParseResult<byte> result;
+			IParseResult result;
 
 			reader = new StringReader("a"); reader.Seek(1);
 			parser = Parse.Digit();
 
 			result = parser.TryParse(reader);
-			Assert.IsFalse(result.IsSuccess);
-			Assert.AreEqual(0, result.Value);
+			Assert.IsFalse(result is ISucceededParseResult);
+			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position); 
 		}
 		
