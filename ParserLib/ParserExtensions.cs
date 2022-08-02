@@ -66,7 +66,31 @@ namespace ParserLib
 			return new Parser<U>(parserDelegate);
 
 		}
-		
+		public static IParser<string> ToStringParser<T>(this IParser<T> A)
+		{
+
+			if (A == null) throw new ArgumentNullException(nameof(A));
+
+			ParserDelegate<string> parserDelegate = (reader, includedChars) =>
+			{
+				IParseResult<T> resultA;
+
+				resultA = A.TryParse(reader, includedChars);
+				switch (resultA)
+				{
+					case IUnexpectedCharParseResult<T> failed:
+						return ParseResult<string>.Failed(failed.Position, failed.Input);
+					case IEndOfReaderParseResult<T> endOfReader:
+						return ParseResult<string>.EndOfReader(endOfReader.Position);
+					case ISucceededParseResult<T> success:
+						return ParseResult<string>.Succeeded(resultA.Position, success.Value?.ToString()??null);
+					default:throw new NotSupportedException("Result type not supported");
+				}
+				
+			};
+			return new Parser<string>(parserDelegate);
+
+		}
 
 
 		#endregion
