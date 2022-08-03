@@ -11,7 +11,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			IParser<string> a;
+			IParser<char> a;
 
 			a = Parse.Char('a');
 
@@ -24,7 +24,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParseMany()
 		{
-			IParser<string> a;
+			IParser<char> a;
 			IParser<string> b;
 
 
@@ -42,20 +42,20 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParseAndTransform()
 		{
-			IParser<string> a;
+			IParser<char> a;
 			IParser<int> b;
-			Tuple<string, int> result;
+			Tuple<char, int> result;
 
 			a = Parse.Char('a');
 			b = from value in Parse.Char('1').OneOrMoreTimes().ToStringParser() select Convert.ToInt32(value);
 
-			IParser<Tuple<string,int>> parser =
+			IParser<Tuple<char, int>> parser =
 				from _a in a
 				from _b in b
-				select new Tuple<string, int>(_a,_b);
+				select new Tuple<char, int>(_a,_b);
 
 			result = parser.Parse("a111");
-			Assert.AreEqual("a", result.Item1);
+			Assert.AreEqual('a', result.Item1);
 			Assert.AreEqual(111, result.Item2);
 		}
 		[TestMethod]

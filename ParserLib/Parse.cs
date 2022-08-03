@@ -9,19 +9,19 @@ namespace ParserLib
 {
 	public static class Parse
 	{
-		public static IParser<string> Char(char Value)
+		public static IParser<char> Char(char Value)
 		{
-			ParserDelegate<string> parserDelegate = (reader, includedChars) =>
+			ParserDelegate<char> parserDelegate = (reader, includedChars) =>
 			{
 				char input;
 				long position;
 
-				position=reader.Position; 
-				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
-				if (input == Value) return ParseResult.Succeeded(position,input.ToString());
-				else return ParseResult.Failed(position,input);
+				position = reader.Position;
+				if (!reader.Read(out input, includedChars)) return ParseResult.EndOfReader(position);
+				if (input == Value) return ParseResult.Succeeded(position, input);
+				else return ParseResult.Failed(position, input);
 			};
-			return new Parser<string>(parserDelegate);
+			return new Parser<char>(parserDelegate);
 		}
 		public static IParser<string> String(string Value)
 		{
@@ -46,57 +46,57 @@ namespace ParserLib
 			};
 			return new Parser<string>(parserDelegate);
 		}
-		public static IParser<string> Any()
+		public static IParser<char> Any()
 		{
-			ParserDelegate<string> parserDelegate = (reader, includedChars) => {
+			ParserDelegate<char> parserDelegate = (reader, includedChars) => {
 				char input;
 				long position;
 
 				position = reader.Position;
 				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
-				return ParseResult.Succeeded(position, input.ToString());
+				return ParseResult.Succeeded(position, input);
 			};
-			return new Parser<string>(parserDelegate);
+			return new Parser<char>(parserDelegate);
 		}
 
-		public static IParser<string> AnyOf(params char[] Values)
+		public static IParser<char> AnyOf(params char[] Values)
 		{
-			ParserDelegate<string> parserDelegate = (reader, includedChars) => {
+			ParserDelegate<char> parserDelegate = (reader, includedChars) => {
 				char input;
 				long position;
 
 				position = reader.Position;
 				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
-				if (Values.Contains(input)) return ParseResult.Succeeded(position,input.ToString());
+				if (Values.Contains(input)) return ParseResult.Succeeded(position,input);
 				else return ParseResult.Failed(position,input);
 			};
-			return new Parser<string>(parserDelegate);
+			return new Parser<char>(parserDelegate);
 		}
-		public static IParser<string> AnyInRange(char First,char Last)
+		public static IParser<char> AnyInRange(char First,char Last)
 		{
-			ParserDelegate<string> parserDelegate = (reader, includedChars) => {
+			ParserDelegate<char> parserDelegate = (reader, includedChars) => {
 				char input;
 				long position;
 
 				position = reader.Position;
 				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
-				if ((input>=First) && (input <= Last)) return ParseResult.Succeeded(position,input.ToString());
+				if ((input>=First) && (input <= Last)) return ParseResult.Succeeded(position,input);
 				else return ParseResult.Failed(position,input);
 			};
-			return new Parser<string>(parserDelegate);
+			return new Parser<char>(parserDelegate);
 		}
-		public static IParser<string> Except(params char[] Values)
+		public static IParser<char> Except(params char[] Values)
 		{
-			ParserDelegate<string> parserDelegate = (reader, includedChars) => {
+			ParserDelegate<char> parserDelegate = (reader, includedChars) => {
 				char input;
 				long position;
 
 				position = reader.Position;
 				if (!reader.Read(out input,includedChars)) return ParseResult.EndOfReader(position);
-				if (!Values.Contains(input)) return ParseResult.Succeeded(position,input.ToString());
+				if (!Values.Contains(input)) return ParseResult.Succeeded(position,input);
 				else return ParseResult.Failed(position,input);
 			};
-			return new Parser<string>(parserDelegate);
+			return new Parser<char>(parserDelegate);
 		}
 
 		public static IParser<byte> Digit()
@@ -135,7 +135,7 @@ namespace ParserLib
 			b = (Parse.Char('2').Then(Parse.AnyInRange('0', '4')).Then(Parse.AnyInRange('0', '9'))).ToStringParser();
 			c = (Parse.Char('1').Then(Parse.AnyInRange('0', '9')).Then(Parse.AnyInRange('0', '9'))).ToStringParser();
 			d = (Parse.AnyInRange('1', '9').Then(Parse.AnyInRange('0', '9').ZeroOrOneTime())).ToStringParser();
-			e = Parse.Char('0');
+			e = Parse.Char('0').ToStringParser();
 			return from value in a.Or(b).Or(c).Or(d).Or(e)
 				   select Convert.ToByte(value);
 		}

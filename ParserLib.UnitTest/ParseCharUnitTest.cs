@@ -9,31 +9,31 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 
 			reader = new StringReader("abc");
 			parser = Parse.Char('a');
 
-			Assert.AreEqual("a", parser.Parse(reader));
+			Assert.AreEqual('a', parser.Parse(reader));
 			Assert.AreEqual(1, reader.Position);
 		}
 		[TestMethod]
 		public void ShouldParseWithIgnoredChars()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 
 			reader = new StringReader("   abc",' ');
 			parser = Parse.Char('a');
 
-			Assert.AreEqual("a", parser.Parse(reader));
+			Assert.AreEqual('a', parser.Parse(reader));
 			Assert.AreEqual(4, reader.Position);
 		}
 		[TestMethod]
 		public void ShouldNotParse()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 
 			reader = new StringReader("abc");
@@ -46,7 +46,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 
 			reader = new StringReader("a");reader.Seek(1);
@@ -60,7 +60,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldTryParse()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 			IParseResult result;
 
@@ -68,14 +68,14 @@ namespace ParserLib.UnitTest
 			parser = Parse.Char('a');
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result is ISucceededParseResult);
-			Assert.AreEqual("a", ((ISucceededParseResult<string>)result).Value);
+			Assert.AreEqual('a', ((ISucceededParseResult<char>)result).Value);
 			Assert.AreEqual(1, reader.Position);
 		}
 
 		[TestMethod]
 		public void ShouldNotTryParse()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 			IParseResult result;
 
@@ -90,7 +90,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotTryParseWhenEOF()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 			IParseResult result;
 

@@ -9,19 +9,19 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 
 			reader = new StringReader("dbc");
 			parser = Parse.Except('c','b','a');
 
-			Assert.AreEqual("d", parser.Parse(reader));
+			Assert.AreEqual('d', parser.Parse(reader));
 			Assert.AreEqual(1, reader.Position);
 		}
 		[TestMethod]
 		public void ShouldNotParse()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 
 			reader = new StringReader("abc");
@@ -34,7 +34,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 
 			reader = new StringReader("a");reader.Seek(1);
@@ -48,7 +48,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldTryParse()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 			IParseResult result;
 
@@ -56,14 +56,14 @@ namespace ParserLib.UnitTest
 			parser = Parse.Except('c', 'b', 'a');
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result is ISucceededParseResult);
-			Assert.AreEqual("d", ((ISucceededParseResult<string>)result).Value);
+			Assert.AreEqual('d', ((ISucceededParseResult<char>)result).Value);
 			Assert.AreEqual(1, reader.Position);
 		}
 
 		[TestMethod]
 		public void ShouldNotTryParse()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 			IParseResult result;
 
@@ -78,7 +78,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotTryParseWhenEOF()
 		{
-			IParser<string> parser;
+			IParser<char> parser;
 			StringReader reader;
 			IParseResult result;
 
