@@ -81,7 +81,6 @@ namespace ParserLib.UnitTest
 			parser = Parse.String("acb");
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -98,7 +97,6 @@ namespace ParserLib.UnitTest
 
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position); 
 		}
 
@@ -113,7 +111,6 @@ namespace ParserLib.UnitTest
 			reader = new StringReader("abe");
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(2, ((UnexpectedCharParseResult)result).Position);
 
 		}

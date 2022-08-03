@@ -75,7 +75,6 @@ namespace ParserLib.UnitTest
 
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position);
 		}
 

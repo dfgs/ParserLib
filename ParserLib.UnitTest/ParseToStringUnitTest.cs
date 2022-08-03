@@ -123,7 +123,6 @@ namespace ParserLib.UnitTest
 			reader = new StringReader("abc");
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.IsNull( ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -140,7 +139,6 @@ namespace ParserLib.UnitTest
 			reader = new StringReader("a"); reader.Seek(1);
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.IsNull( ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position); 
 		}
 		

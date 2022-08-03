@@ -29,7 +29,7 @@ namespace ParserLib.UnitTest
 
 
 			a = Parse.Char('a');
-			b = Parse.Char('b').OneOrMoreTimes();
+			b = Parse.Char('b').OneOrMoreTimes().ToStringParser();
 
 			IParser<string> parser =
 				from _a in a
@@ -47,7 +47,7 @@ namespace ParserLib.UnitTest
 			Tuple<string, int> result;
 
 			a = Parse.Char('a');
-			b = from value in Parse.Char('1').OneOrMoreTimes() select Convert.ToInt32(value);
+			b = from value in Parse.Char('1').OneOrMoreTimes().ToStringParser() select Convert.ToInt32(value);
 
 			IParser<Tuple<string,int>> parser =
 				from _a in a
@@ -68,14 +68,13 @@ namespace ParserLib.UnitTest
 			parser =
 				from _a in Parse.String("Item")
 				from _b in Parse.Char('(')
-				from _c in (Parse.Char('a').Or(Parse.Char('b'))).ZeroOrMoreTimes()
+				from _c in (Parse.Char('a').Or(Parse.Char('b'))).ZeroOrMoreTimes().ToStringParser()
 				from _d in Parse.Char(')')
 				select _c;
 
 			reader = new StringReader("Item(abac)");
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(8, ((UnexpectedCharParseResult)result).Position);
 
 		}

@@ -57,7 +57,7 @@ namespace ParserLib.UnitTest
 			parser = Parse.IPAddress();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result is ISucceededParseResult);
-			Assert.AreEqual(IPAddress.Parse("192.168.0.1"), ((ISucceededParseResult<string>)result).Value);
+			Assert.AreEqual(IPAddress.Parse("192.168.0.1"), ((ISucceededParseResult<IPAddress>)result).Value);
 			Assert.AreEqual(11, reader.Position);
 		}
 
@@ -72,7 +72,6 @@ namespace ParserLib.UnitTest
 			parser = Parse.IPAddress();
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -89,7 +88,6 @@ namespace ParserLib.UnitTest
 
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position); 
 
 			

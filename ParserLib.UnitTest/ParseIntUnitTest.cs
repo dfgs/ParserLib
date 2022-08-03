@@ -62,25 +62,25 @@ namespace ParserLib.UnitTest
 			reader = new StringReader("2555");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result is ISucceededParseResult);
-			Assert.AreEqual(2555, ((ISucceededParseResult<string>)result).Value);
+			Assert.AreEqual(2555, ((ISucceededParseResult<int>)result).Value);
 			Assert.AreEqual(4, reader.Position);
 
 			reader = new StringReader("1999");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result is ISucceededParseResult);
-			Assert.AreEqual(1999, ((ISucceededParseResult<string>)result).Value);
+			Assert.AreEqual(1999, ((ISucceededParseResult<int>)result).Value);
 			Assert.AreEqual(4, reader.Position);
 
 			reader = new StringReader("-99");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result is ISucceededParseResult);
-			Assert.AreEqual(-99, ((ISucceededParseResult<string>)result).Value);
+			Assert.AreEqual(-99, ((ISucceededParseResult<int>)result).Value);
 			Assert.AreEqual(3, reader.Position);
 
 			reader = new StringReader("0");
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result is ISucceededParseResult);
-			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
+			Assert.AreEqual(0, ((ISucceededParseResult<int>)result).Value);
 			Assert.AreEqual(1, reader.Position);
 		}
 
@@ -99,7 +99,6 @@ namespace ParserLib.UnitTest
 			reader = new StringReader("a"); reader.Seek(1);
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position); 
 		}
 		

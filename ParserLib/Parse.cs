@@ -131,10 +131,10 @@ namespace ParserLib
 			
 			IParser<string> a, b, c,d,e;
 
-			a = Parse.Char('2').Then(Parse.Char('5')).Then(Parse.AnyInRange('0', '5'));
-			b = Parse.Char('2').Then(Parse.AnyInRange('0', '4')).Then(Parse.AnyInRange('0', '9'));
-			c = Parse.Char('1').Then(Parse.AnyInRange('0', '9')).Then(Parse.AnyInRange('0', '9'));
-			d = Parse.AnyInRange('1', '9').Then(Parse.AnyInRange('0', '9').ZeroOrOneTime());
+			a = (Parse.Char('2').Then(Parse.Char('5')).Then(Parse.AnyInRange('0', '5'))).ToStringParser() ;
+			b = (Parse.Char('2').Then(Parse.AnyInRange('0', '4')).Then(Parse.AnyInRange('0', '9'))).ToStringParser();
+			c = (Parse.Char('1').Then(Parse.AnyInRange('0', '9')).Then(Parse.AnyInRange('0', '9'))).ToStringParser();
+			d = (Parse.AnyInRange('1', '9').Then(Parse.AnyInRange('0', '9').ZeroOrOneTime())).ToStringParser();
 			e = Parse.Char('0');
 			return from value in a.Or(b).Or(c).Or(d).Or(e)
 				   select Convert.ToByte(value);
@@ -144,8 +144,8 @@ namespace ParserLib
 
 			IParser<string> positive,negative;
 
-			negative = Parse.Char('-').Then(Parse.AnyInRange('0', '9').OneOrMoreTimes());
-			positive = Parse.AnyInRange('0', '9').OneOrMoreTimes();
+			negative = Parse.Char('-').Then(Parse.AnyInRange('0', '9').OneOrMoreTimes()).ToStringParser();
+			positive = Parse.AnyInRange('0', '9').OneOrMoreTimes().ToStringParser();
 			return from value in positive.Or(negative)
 				   select Convert.ToInt32(value);
 		}
@@ -199,7 +199,7 @@ namespace ParserLib
 			return new Parser<T>(parseDelegate);
 		}
 
-		public static IParser<string> Then(this IParser<string> A, IParser<string> B)
+		/*public static IParser<string> Then(this IParser<string> A, IParser<string> B)
 		{
 			if (A == null) throw new ArgumentNullException(nameof(A));
 			if (B == null) throw new ArgumentNullException(nameof(B));
@@ -220,7 +220,7 @@ namespace ParserLib
 				return ParseResult.Succeeded(result1.Position,success1.Value + success2.Value) ;
 			};
 			return new Parser<string>(parserDelegate);
-		}
+		}*/
 		
 
 		public static IParser<IEnumerable<T>> OneOrMoreTimes<T>(this IParser<T> Parser)
@@ -261,7 +261,46 @@ namespace ParserLib
 			};
 			return new Parser<IEnumerable<T>>(parserDelegate);
 		}
-		public static IParser<T> OneOrMoreTimes<T>(this IParser<T> Parser,Func<IEnumerable<T>,T> Func)
+		public static IParser<IEnumerable<T>> OneOrMoreTimes<T>(this IParser<IEnumerable<T>> Parser)
+		{
+			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
+			ParserDelegate<IEnumerable<T>> parserDelegate = (reader, includedChars) =>
+			{
+				IParseResult result;
+				List<T> items;
+				long position;
+
+				items = new List<T>();
+
+				position = reader.Position;
+				result = Parser.TryParse(reader, includedChars);
+				switch (result)
+				{
+					case ISucceededParseResult<IEnumerable<T>> success:
+						items.AddRange(success.Value);
+						break;
+					default: return result;
+				}
+
+				while (!reader.EOF)
+				{
+					result = Parser.TryParse(reader, includedChars);
+					switch (result)
+					{
+						case ISucceededParseResult<IEnumerable<T>> success:
+							items.AddRange(success.Value);
+							break;
+						default:
+							return ParseResult.Succeeded<IEnumerable<T>>(position, items);
+					}
+				}
+
+				return ParseResult.Succeeded<IEnumerable<T>>(position, items);
+			};
+			return new Parser<IEnumerable<T>>(parserDelegate);
+		}
+
+		/*public static IParser<T> OneOrMoreTimes<T>(this IParser<T> Parser,Func<IEnumerable<T>,T> Func)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			if (Func == null) throw new ArgumentNullException(nameof(Func));
@@ -300,11 +339,11 @@ namespace ParserLib
 				return ParseResult.Succeeded<T>(position,Func(items));
 			};
 			return new Parser<T>(parserDelegate);
-		}
-		public static IParser<string> OneOrMoreTimes(this IParser<string> Parser)
+		}//*/
+		/*public static IParser<string> OneOrMoreTimes(this IParser<string> Parser)
 		{
 			return Parser.OneOrMoreTimes((items) => string.Join("", items));
-		}
+		}//*/
 		public static IParser<IEnumerable<T>> ZeroOrMoreTimes<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
@@ -345,7 +384,50 @@ namespace ParserLib
 			return new Parser<IEnumerable<T>>(parserDelegate);
 
 		}
-		public static IParser<T> ZeroOrMoreTimes<T>(this IParser<T> Parser, Func<IEnumerable<T>, T> Func)
+
+		public static IParser<IEnumerable<T>> ZeroOrMoreTimes<T>(this IParser<IEnumerable<T>> Parser)
+		{
+			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
+			ParserDelegate<IEnumerable<T>> parserDelegate = (reader, includedChars) =>
+			{
+				IParseResult result;
+				List<T> items;
+				long position;
+
+				items = new List<T>();
+
+				position = reader.Position;
+				result = Parser.TryParse(reader, includedChars);
+				switch (result)
+				{
+					case ISucceededParseResult<IEnumerable<T>> success:
+						items.AddRange(success.Value);
+						break;
+					default:
+						return ParseResult.Succeeded(position, Enumerable.Empty<T>());
+				}
+
+				while (!reader.EOF)
+				{
+					result = Parser.TryParse(reader, includedChars);
+					switch (result)
+					{
+						case ISucceededParseResult<IEnumerable<T>> success:
+							items.AddRange(success.Value);
+							break;
+						default:
+							return ParseResult.Succeeded(position, items);
+					}
+				}
+
+				return ParseResult.Succeeded(position, items);
+			};
+			return new Parser<IEnumerable<T>>(parserDelegate);
+
+		}
+
+
+		/*public static IParser<T> ZeroOrMoreTimes<T>(this IParser<T> Parser, Func<IEnumerable<T>, T> Func)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			if (Func == null) throw new ArgumentNullException(nameof(Func));
@@ -385,11 +467,11 @@ namespace ParserLib
 				return ParseResult.Succeeded(position, Func(items));
 			};
 			return new Parser<T>(parserDelegate);
-		}
-		public static IParser<string> ZeroOrMoreTimes(this IParser<string> Parser)
+		}//*/
+		/*public static IParser<string> ZeroOrMoreTimes(this IParser<string> Parser)
 		{
 			return Parser.ZeroOrMoreTimes((items) => string.Join("", items));
-		}
+		}//*/
 
 		public static IParser<T> ZeroOrOneTime<T>(this IParser<T> Parser)
 		{

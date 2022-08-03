@@ -13,7 +13,7 @@ namespace ParserLib.UnitTest
 			StringReader reader;
 
 			reader = new StringReader("abc def",' ');
-			parser = Parse.Except(' ').OneOrMoreTimes().ReaderIncludes(' ');
+			parser = Parse.Except(' ').OneOrMoreTimes().ReaderIncludes(' ').ToStringParser();
 
 			// should not ignore ' ' and read abcdef
 			Assert.AreEqual("abc", parser.Parse(reader));

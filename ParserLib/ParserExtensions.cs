@@ -60,6 +60,54 @@ namespace ParserLib
 			};
 			return new Parser<IEnumerable<T>>(parserDelegate);
 		}
+		public static IParser<IEnumerable<T>> Then<T>(this IParser<IEnumerable<T>> A, IParser<T> B)
+		{
+			if (A == null) throw new ArgumentNullException(nameof(A));
+			if (B == null) throw new ArgumentNullException(nameof(B));
+			ParserDelegate<IEnumerable<T>> parserDelegate = (reader, includedChars) =>
+			{
+				IParseResult result1;
+				IParseResult result2;
+				ISucceededParseResult<IEnumerable<T>> success1;
+				ISucceededParseResult<T> success2;
+
+
+				result1 = A.TryParse(reader, includedChars);
+				success1 = result1 as ISucceededParseResult<IEnumerable<T>>;
+				if (success1 == null) return result1;
+
+				result2 = B.TryParse(reader, includedChars);
+				success2 = result2 as ISucceededParseResult<T>;
+				if (success2 == null) return result2;
+				
+				return ParseResult.Succeeded<IEnumerable<T>>(result1.Position,success1.Value.Append( success2.Value ).ToArray());
+			};
+			return new Parser<IEnumerable<T>>(parserDelegate);
+		}
+		public static IParser<IEnumerable<T>> Then<T>(this IParser<T> A, IParser<IEnumerable<T>> B)
+		{
+			if (A == null) throw new ArgumentNullException(nameof(A));
+			if (B == null) throw new ArgumentNullException(nameof(B));
+			ParserDelegate<IEnumerable<T>> parserDelegate = (reader, includedChars) =>
+			{
+				IParseResult result1;
+				IParseResult result2;
+				ISucceededParseResult<T> success1;
+				ISucceededParseResult<IEnumerable<T>> success2;
+
+
+				result1 = A.TryParse(reader, includedChars);
+				success1 = result1 as ISucceededParseResult<T>;
+				if (success1 == null) return result1;
+
+				result2 = B.TryParse(reader, includedChars);
+				success2 = result2 as ISucceededParseResult<IEnumerable<T>>;
+				if (success2 == null) return result2;
+
+				return ParseResult.Succeeded<IEnumerable<T>>(result1.Position, success2.Value.Prepend(success1.Value).ToArray());
+			};
+			return new Parser<IEnumerable<T>>(parserDelegate);
+		}
 		public static IParser<U> Then<T, U>(this IParser<T> First, Func<T, IParser<U>> Second)
 		{
 
@@ -103,9 +151,27 @@ namespace ParserLib
 				
 			};
 			return new Parser<string>(parserDelegate);
-
 		}
+		public static IParser<string> ToStringParser<T>(this IParser<IEnumerable<T>> A)
+		{
 
+			if (A == null) throw new ArgumentNullException(nameof(A));
+
+			ParserDelegate<string> parserDelegate = (reader, includedChars) =>
+			{
+				IParseResult resultA;
+
+				resultA = A.TryParse(reader, includedChars);
+				switch (resultA)
+				{
+					case ISucceededParseResult<IEnumerable<T>> success:
+						return ParseResult.Succeeded<string>(resultA.Position, string.Concat(success.Value?? Enumerable.Empty<T>()));
+					default: return resultA;
+				}
+
+			};
+			return new Parser<string>(parserDelegate);
+		}
 
 		#endregion
 

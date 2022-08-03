@@ -14,7 +14,7 @@ namespace ParserLib.UnitTest
 			StringReader reader;
 
 			reader = new StringReader("abc");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
 
 			Assert.AreEqual("abc", parser.Parse(reader));
 			Assert.AreEqual(3, reader.Position);
@@ -26,7 +26,7 @@ namespace ParserLib.UnitTest
 			StringReader reader;
 
 			reader = new StringReader("abd");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
 
 			Assert.ThrowsException<UnexpectedCharException>(() => parser.Parse(reader));
 			Assert.AreEqual(0, reader.Position);
@@ -39,7 +39,7 @@ namespace ParserLib.UnitTest
 			StringReader reader;
 
 			reader = new StringReader("aab"); reader.Seek(1);
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
 
 			Assert.ThrowsException<EndOfReaderException>(() => parser.Parse(reader));
 			Assert.AreEqual(1, reader.Position);
@@ -54,7 +54,7 @@ namespace ParserLib.UnitTest
 			IParseResult result;
 
 			reader = new StringReader("abc");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
 			result = parser.TryParse(reader);
 			Assert.IsTrue(result is ISucceededParseResult);
 			Assert.AreEqual("abc", ((ISucceededParseResult<string>)result).Value);
@@ -69,10 +69,9 @@ namespace ParserLib.UnitTest
 			IParseResult result;
 
 			reader = new StringReader("abd");
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -85,11 +84,10 @@ namespace ParserLib.UnitTest
 			IParseResult result;
 
 			reader = new StringReader("aa"); reader.Seek(1);
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
 
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position);
 		}
 
@@ -100,11 +98,10 @@ namespace ParserLib.UnitTest
 			StringReader reader;
 			IParseResult result;
 
-			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c'));
+			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
 			reader = new StringReader("abe");
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(null, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(2, ((UnexpectedCharParseResult)result).Position);
 
 		}

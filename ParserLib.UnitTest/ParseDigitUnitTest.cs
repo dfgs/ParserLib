@@ -62,7 +62,7 @@ namespace ParserLib.UnitTest
 			{
 				result = parser.TryParse(reader);
 				Assert.IsTrue(result is ISucceededParseResult);
-				Assert.AreEqual(t, ((ISucceededParseResult<string>)result).Value);
+				Assert.AreEqual(t, ((ISucceededParseResult<byte>)result).Value);
 				Assert.AreEqual(t+1, reader.Position);
 			}
 		}
@@ -78,7 +78,6 @@ namespace ParserLib.UnitTest
 			parser = Parse.Digit();
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -95,7 +94,6 @@ namespace ParserLib.UnitTest
 
 			result = parser.TryParse(reader);
 			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(0, ((ISucceededParseResult<string>)result).Value);
 			Assert.AreEqual(1, reader.Position); 
 		}
 		
