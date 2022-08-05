@@ -51,12 +51,12 @@ namespace ParserLib.UnitTest
 		{
 			IParser<IPAddress> parser;
 			StringReader reader;
-			IParseResult result;
+			IParseResult<IPAddress> result;
 
 			reader = new StringReader("192.168.0.1");
 			parser = Parse.IPAddress();
 			result = parser.TryParse(reader);
-			Assert.IsTrue(result is ISucceededParseResult);
+			Assert.IsTrue(result is ISucceededParseResult<IPAddress>);
 			Assert.AreEqual(IPAddress.Parse("192.168.0.1"), ((ISucceededParseResult<IPAddress>)result).Value);
 			Assert.AreEqual(11, reader.Position);
 		}
@@ -66,12 +66,12 @@ namespace ParserLib.UnitTest
 		{
 			IParser<IPAddress> parser;
 			StringReader reader;
-			IParseResult result;
+			IParseResult<IPAddress> result;
 
 			reader = new StringReader("192.256.0.1");
 			parser = Parse.IPAddress();
 			result = parser.TryParse(reader);
-			Assert.IsFalse(result is ISucceededParseResult);
+			Assert.IsFalse(result is ISucceededParseResult<IPAddress>);
 			Assert.AreEqual(0, reader.Position);
 		}
 
@@ -81,13 +81,13 @@ namespace ParserLib.UnitTest
 		{
 			IParser<IPAddress> parser;
 			StringReader reader;
-			IParseResult result;
+			IParseResult<IPAddress> result;
 
 			reader = new StringReader("192."); reader.Seek(1);
 			parser = Parse.IPAddress();
 
 			result = parser.TryParse(reader);
-			Assert.IsFalse(result is ISucceededParseResult);
+			Assert.IsFalse(result is ISucceededParseResult<IPAddress>);
 			Assert.AreEqual(1, reader.Position); 
 
 			

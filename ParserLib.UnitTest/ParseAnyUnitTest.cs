@@ -50,12 +50,12 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult result;
+			IParseResult<char> result;
 
 			reader = new StringReader("abc");
 			parser = Parse.Any();
 			result = parser.TryParse(reader);
-			Assert.IsTrue(result is ISucceededParseResult);
+			Assert.IsTrue(result is ISucceededParseResult<char>);
 			Assert.AreEqual('a', ((ISucceededParseResult<char>)result).Value);
 			Assert.AreEqual(1, reader.Position);
 		}
@@ -68,13 +68,13 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult result;
+			IParseResult<char> result;
 
 			reader = new StringReader("a"); reader.Seek(1);
 			parser = Parse.Any();
 
 			result = parser.TryParse(reader);
-			Assert.IsFalse(result is ISucceededParseResult);
+			Assert.IsFalse(result is ISucceededParseResult<char>);
 			Assert.AreEqual(1, reader.Position);
 		}
 

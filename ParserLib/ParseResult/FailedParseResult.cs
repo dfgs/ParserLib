@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public abstract class FailedParseResult : ParseResult, IFailedParseResult
+	public abstract class FailedParseResult<T> : ParseResult<T>, IFailedParseResult<T>
 	{
 		/*public override bool IsSuccess
 		{
@@ -24,9 +24,6 @@ namespace ParserLib
 		{
 		}
 
-					
-		
-
-
+		public abstract IFailedParseResult<U> Cast<U>();
 	}
 }

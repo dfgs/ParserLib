@@ -63,7 +63,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult result;
+			IParseResult<string> result;
 
 			parser =
 				from _a in Parse.String("Item")
@@ -74,8 +74,8 @@ namespace ParserLib.UnitTest
 
 			reader = new StringReader("Item(abac)");
 			result = parser.TryParse(reader);
-			Assert.IsFalse(result is ISucceededParseResult);
-			Assert.AreEqual(8, ((UnexpectedCharParseResult)result).Position);
+			Assert.IsFalse(result is ISucceededParseResult<string>);
+			Assert.AreEqual(8, ((UnexpectedCharParseResult<string>)result).Position);
 
 		}
 

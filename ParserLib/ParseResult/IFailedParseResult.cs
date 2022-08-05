@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public interface IFailedParseResult :IParseResult
+	public interface IFailedParseResult<T> :IParseResult<T>
 	{
 		Exception Exception
 		{
 			get;
 		}
 
-
+		public IFailedParseResult<U> Cast<U>();
 
 
 

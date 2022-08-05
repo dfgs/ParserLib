@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public interface IParseResult
+	public interface IParseResult<out T>
 	{
 		/*bool IsSuccess
 		{

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public class EndOfReaderParseResult : FailedParseResult, IEndOfReaderParseResult
+	public class EndOfReaderParseResult<T> : FailedParseResult<T>, IEndOfReaderParseResult<T>
 	{
 	
 
@@ -21,6 +21,11 @@ namespace ParserLib
 			this.exception = new EndOfReaderException();
 		}
 
-		
+		public override IFailedParseResult<U> Cast<U>()
+		{
+			return new EndOfReaderParseResult<U>(Position);
+		}
+
+
 	}
 }

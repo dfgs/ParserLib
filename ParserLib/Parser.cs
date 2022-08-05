@@ -24,7 +24,7 @@ namespace ParserLib
 		}
 		public T Parse(IReader Reader, params char[] IncludedChars)
 		{
-			IParseResult result;
+			IParseResult<T> result;
 			long position;
 
 			if (Reader == null) throw new ArgumentNullException(nameof(Reader));
@@ -35,16 +35,38 @@ namespace ParserLib
 			if (result is ISucceededParseResult<T> success) return success.Value;
 
 			Reader.Seek(position);
-			throw ((IFailedParseResult)result).Exception;
+			throw ((IFailedParseResult<T>)result).Exception;
 		}
-		public IParseResult TryParse(string Value, params char[] IgnoredChars)
+
+		public IEnumerable<T> ParseAll(string Value, params char[] IgnoredChars)
+		{
+			if (Value == null) throw new ArgumentNullException(nameof(Value));
+			return ParseAll(new StringReader(Value, IgnoredChars));
+		}
+		public IEnumerable<T> ParseAll(IReader Reader, params char[] IncludedChars)
+		{
+			IParseResult<T> result;
+			long position;
+
+			if (Reader == null) throw new ArgumentNullException(nameof(Reader));
+
+			position = Reader.Position;
+			result = parserDelegate(Reader, IncludedChars);
+
+			if (result is ISucceededParseResult<T> success) return success.EnumerateValue();
+
+			Reader.Seek(position);
+			throw ((IFailedParseResult<T>)result).Exception;
+		}
+
+		public IParseResult<T> TryParse(string Value, params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
 			return TryParse(new StringReader(Value,IgnoredChars));
 		}
-		public IParseResult TryParse(IReader Reader, params char[] IncludedChars)
+		public IParseResult<T> TryParse(IReader Reader, params char[] IncludedChars)
 		{
-			IParseResult result;
+			IParseResult<T> result;
 			long position;
 
 			if (Reader == null) throw new ArgumentNullException(nameof(Reader));

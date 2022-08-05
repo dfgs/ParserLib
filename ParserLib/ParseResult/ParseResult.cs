@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public abstract class ParseResult :IParseResult
+	public abstract class ParseResult<T> : IParseResult<T>
 	{
 		/*public abstract bool IsSuccess
 		{
@@ -23,18 +24,21 @@ namespace ParserLib
 		{
 			this.position = Position;
 		}
-		public static SucceededParseResult<T> Succeeded<T>(long Position,T Value)
+		public static SingleSucceededParseResult<T> Succeeded(long Position, T Value)
 		{
-			//if (Value == null) throw new ArgumentNullException(nameof(Value));
-			return new SucceededParseResult<T>(Position,Value);
+			return new SingleSucceededParseResult<T>(Position, Value);
 		}
-		public static UnexpectedCharParseResult Failed(long Position, char Input)
+		public static MultipleSucceededParseResult<T> Succeeded(long Position, IEnumerable<T> Value)
 		{
-			return new UnexpectedCharParseResult(Position,Input);
+			return new MultipleSucceededParseResult<T>(Position, Value);
 		}
-		public static EndOfReaderParseResult EndOfReader(long Position)
+		public static UnexpectedCharParseResult<T> Failed(long Position, char Input)
 		{
-			return new EndOfReaderParseResult(Position);
+			return new UnexpectedCharParseResult<T>(Position,Input);
+		}
+		public static EndOfReaderParseResult<T> EndOfReader(long Position)
+		{
+			return new EndOfReaderParseResult<T>(Position);
 		}
 
 	}

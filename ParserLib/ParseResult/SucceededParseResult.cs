@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,29 +7,18 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public class SucceededParseResult<T>:ParseResult, ISucceededParseResult<T>
+	public abstract class SucceededParseResult<T>:ParseResult<T>, ISucceededParseResult<T>
 	{
-		/*public override bool IsSuccess
-		{
-			get => true;
-		}//*/
-		
-		private T value;
-		public T Value
-		{
-			get => value;
-		}
+		public abstract T Value { get; }
 
-		
-		public SucceededParseResult(long Position,T Value):base(Position)
+
+		public SucceededParseResult(long Position):base(Position)
 		{
-			this.value = Value;
+			
 		}
 
 
-		
-
-
+		public abstract IEnumerable<T> EnumerateValue();
 
 	}
 }
