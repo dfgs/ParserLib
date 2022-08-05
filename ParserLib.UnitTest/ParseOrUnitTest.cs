@@ -7,9 +7,54 @@ namespace ParserLib.UnitTest
 	public class ParseOrUnitTest
 	{
 		[TestMethod]
+		public void ShouldParse_Single_Single()
+		{
+			ISingleParser<char> a, b;
+			ISingleParser<char> parser;
+			StringReader reader;
+
+			a = Parse.Char('a');
+			b = Parse.Char('b');
+			parser = a.Or(b);
+
+			reader = new StringReader("a");
+			Assert.AreEqual('a', parser.Parse(reader));
+			Assert.AreEqual(1, reader.Position);
+
+			reader = new StringReader("b");
+			Assert.AreEqual('b', parser.Parse(reader));
+			Assert.AreEqual(1, reader.Position);
+		}
+		[TestMethod]
+		public void ShouldParse_Multiple_Multiple()
+		{
+			IMultipleParser<char> a, b;
+			IMultipleParser<char> parser;
+			char[] result;
+			StringReader reader;
+
+			a = Parse.Char('a').OneOrMoreTimes();
+			b = Parse.Char('b').OneOrMoreTimes();
+			parser = a.Or(b);
+
+			reader = new StringReader("aaa");
+			result = parser.Parse(reader).ToArray();
+			Assert.AreEqual(3, result.Length);
+			Assert.AreEqual("aaa", string.Concat(result));
+			Assert.AreEqual(3, reader.Position);
+
+			reader = new StringReader("bbb");
+			result = parser.Parse(reader).ToArray();
+			Assert.AreEqual(3, result.Length);
+			Assert.AreEqual("bbb", string.Concat(result));
+			Assert.AreEqual(3, reader.Position);
+		}
+		
+		[TestMethod]
 		public void ShouldParse()
 		{
-			IParser<string> a,b,parser;
+			ISingleParser<string> a, b;
+			ISingleParser<string> parser;
 			StringReader reader;
 
 			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
@@ -28,7 +73,8 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParse()
 		{
-			IParser<string> a, b, parser;
+			ISingleParser<string> a, b;
+			ISingleParser<string> parser;
 			StringReader reader;
 
 			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
@@ -43,7 +89,8 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			IParser<string> a, b, parser;
+			ISingleParser<string> a, b;
+			ISingleParser<string> parser;
 			StringReader reader;
 
 			a = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ToStringParser();
@@ -59,7 +106,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldTryParse()
 		{
-			IParser<string> a, b, parser;
+			ISingleParser<string> a, b, parser;
 			StringReader reader;
 			IParseResult<string> result;
 
@@ -86,7 +133,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotTryParse()
 		{
-			IParser<string> a, b, parser;
+			ISingleParser<string> a, b, parser;
 			StringReader reader;
 			IParseResult<string> result;
 
@@ -104,7 +151,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotTryParseWhenEOF()
 		{
-			IParser<string> a, b, parser;
+			ISingleParser<string> a, b, parser;
 			StringReader reader;
 			IParseResult<string> result;
 
@@ -122,7 +169,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldReturnHigherErrorPos()
 		{
-			IParser<string> a, b, parser;
+			ISingleParser<string> a, b, parser;
 			StringReader reader;
 			IParseResult<string> result;
 

@@ -9,47 +9,140 @@ namespace ParserLib.UnitTest
 	public class ParseLinqUnitTest
 	{
 		[TestMethod]
-		public void ShouldParse()
+		public void ShouldSelect_SingleParser()
 		{
-			IParser<char> a;
+			ISingleParser<char> a;
+			ISingleParser<string> parser;
+			string result;
 
 			a = Parse.Char('a');
 
-			IParser<string> parser =
-				from _a in a
-				select _a + "2";
+			parser = a.Select(_a => _a + "2");
+			result =parser.Parse("ab");
+			Assert.AreEqual("a2", result);
 
-			Assert.AreEqual("a2", parser.Parse("ab"));
+			parser = from _a in a
+					select _a + "2";
+
+			result = parser.Parse("ab");
+			Assert.AreEqual("a2", result);
 		}
 		[TestMethod]
-		public void ShouldParseMany()
+		public void ShouldSelect_MultipleParser()
 		{
-			IParser<char> a;
-			IParser<string> b;
+			IMultipleParser<char> a;
+			ISingleParser<string> parser;
+			string result;
+
+			a = Parse.Char('a').OneOrMoreTimes();
+
+			parser = a.Select(_a => string.Concat(_a) + "2");
+			result = parser.Parse("aaab");
+			Assert.AreEqual("aaa2", result);
+
+			parser = from _a in a
+					 select string.Concat(_a) + "2";
+
+			result = parser.Parse("aaab");
+			Assert.AreEqual("aaa2", result);
+		}
+
+		
+		[TestMethod]
+		public void ShouldSelectMany_SingleParser_SingleParser()
+		{
+			ISingleParser<char> a;
+			ISingleParser<byte> b;
+			ISingleParser<string> parser;
 
 
 			a = Parse.Char('a');
-			b = Parse.Char('b').OneOrMoreTimes().ToStringParser();
+			b = Parse.Byte();
 
-			IParser<string> parser =
+			parser = a.SelectMany<char, byte, string>(_a => b, (_a, _b) => _a + "_" + _b);
+			Assert.AreEqual("a_128", parser.Parse("a128"));
+
+			parser =
 				from _a in a
 				from _b in b
-				select _a + "2" + _b;
-
-			Assert.AreEqual("a2bb", parser.Parse("abb"));
+				select _a + "_" + _b;
+			Assert.AreEqual("a_128", parser.Parse("a128"));
 		}
+		[TestMethod]
+		public void ShouldSelectMany_MultipleParser_MultipleParser()
+		{
+			IMultipleParser<char> a;
+			IMultipleParser<byte> b;
+			ISingleParser<string> parser;
+
+
+			a = Parse.Char('a').OneOrMoreTimes();
+			b = Parse.Digit().OneOrMoreTimes();
+
+			parser = a.SelectMany<char, byte, string>(_a => b, (_a, _b) => string.Concat(_a) + "_" + string.Concat(_b));
+			Assert.AreEqual("aaa_128", parser.Parse("aaa128"));
+
+			parser =
+				from _a in a
+				from _b in b
+				select string.Concat(_a) + "_" + string.Concat(_b);
+			Assert.AreEqual("aaa_128", parser.Parse("aaa128"));
+		}
+
+		[TestMethod]
+		public void ShouldSelectMany_SingleParser_MultipleParser()
+		{
+			ISingleParser<char> a;
+			IMultipleParser<byte> b;
+			ISingleParser<string> parser;
+
+
+			a = Parse.Char('a');
+			b = Parse.Digit().OneOrMoreTimes();
+
+			parser = a.SelectMany<char, byte, string>(_a => b, (_a, _b) => string.Concat(_a) + "_" + string.Concat(_b));
+			Assert.AreEqual("a_128", parser.Parse("a128"));
+
+			parser =
+				from _a in a
+				from _b in b
+				select _a + "_" + string.Concat(_b);
+			Assert.AreEqual("a_128", parser.Parse("a128"));
+		}
+
+		[TestMethod]
+		public void ShouldSelectMany_MultipleParser_SingleParser()
+		{
+			IMultipleParser<char> a;
+			ISingleParser<byte> b;
+			ISingleParser<string> parser;
+
+
+			a = Parse.Char('a').OneOrMoreTimes();
+			b = Parse.Digit();
+
+			parser = a.SelectMany<char, byte, string>(_a => b, (_a, _b) => string.Concat(_a) + "_" +_b);
+			Assert.AreEqual("aaa_1", parser.Parse("aaa1"));
+
+			parser =
+				from _a in a
+				from _b in b
+				select string.Concat(_a) + "_" + _b;
+			Assert.AreEqual("aaa_1", parser.Parse("aaa1"));
+		}
+
 
 		[TestMethod]
 		public void ShouldParseAndTransform()
 		{
-			IParser<char> a;
-			IParser<int> b;
+			ISingleParser<char> a;
+			ISingleParser<int> b;
 			Tuple<char, int> result;
 
 			a = Parse.Char('a');
 			b = from value in Parse.Char('1').OneOrMoreTimes().ToStringParser() select Convert.ToInt32(value);
 
-			IParser<Tuple<char, int>> parser =
+			ISingleParser<Tuple<char, int>> parser =
 				from _a in a
 				from _b in b
 				select new Tuple<char, int>(_a,_b);

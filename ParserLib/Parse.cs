@@ -9,7 +9,7 @@ namespace ParserLib
 {
 	public static class Parse
 	{
-		public static IParser<char> Char(char Value)
+		public static ISingleParser<char> Char(char Value)
 		{
 			ParserDelegate<char> parserDelegate = (reader, includedChars) =>
 			{
@@ -21,9 +21,9 @@ namespace ParserLib
 				if (input == Value) return ParseResult<char>.Succeeded(position, input);
 				else return ParseResult<char>.Failed(position, input);
 			};
-			return new Parser<char>(parserDelegate);
+			return new SingleParser<char>(parserDelegate);
 		}
-		public static IParser<string> String(string Value)
+		public static ISingleParser<string> String(string Value)
 		{
 			char input;
 
@@ -44,9 +44,9 @@ namespace ParserLib
 				
 				return ParseResult<string>.Succeeded(reader.Position - 1,Value);
 			};
-			return new Parser<string>(parserDelegate);
+			return new SingleParser<string>(parserDelegate);
 		}
-		public static IParser<char> Any()
+		public static ISingleParser<char> Any()
 		{
 			ParserDelegate<char> parserDelegate = (reader, includedChars) => {
 				char input;
@@ -56,10 +56,10 @@ namespace ParserLib
 				if (!reader.Read(out input,includedChars)) return ParseResult<char>.EndOfReader(position);
 				return ParseResult<char>.Succeeded(position, input);
 			};
-			return new Parser<char>(parserDelegate);
+			return new SingleParser<char>(parserDelegate);
 		}
 
-		public static IParser<char> AnyOf(params char[] Values)
+		public static ISingleParser<char> AnyOf(params char[] Values)
 		{
 			ParserDelegate<char> parserDelegate = (reader, includedChars) => {
 				char input;
@@ -70,9 +70,9 @@ namespace ParserLib
 				if (Values.Contains(input)) return ParseResult<char>.Succeeded(position, input);
 				else return ParseResult<char>.Failed(position,input);
 			};
-			return new Parser<char>(parserDelegate);
+			return new SingleParser<char>(parserDelegate);
 		}
-		public static IParser<char> AnyInRange(char First,char Last)
+		public static ISingleParser<char> AnyInRange(char First,char Last)
 		{
 			ParserDelegate<char> parserDelegate = (reader, includedChars) => {
 				char input;
@@ -83,9 +83,9 @@ namespace ParserLib
 				if ((input>=First) && (input <= Last)) return ParseResult<char>.Succeeded(position, input);
 				else return ParseResult<char>.Failed(position,input);
 			};
-			return new Parser<char>(parserDelegate);
+			return new SingleParser<char>(parserDelegate);
 		}
-		public static IParser<char> Except(params char[] Values)
+		public static ISingleParser<char> Except(params char[] Values)
 		{
 			ParserDelegate<char> parserDelegate = (reader, includedChars) => {
 				char input;
@@ -96,10 +96,10 @@ namespace ParserLib
 				if (!Values.Contains(input)) return ParseResult<char>.Succeeded(position, input);
 				else return ParseResult<char>.Failed(position,input);
 			};
-			return new Parser<char>(parserDelegate);
+			return new SingleParser<char>(parserDelegate);
 		}
 
-		public static IParser<byte> Digit()
+		public static ISingleParser<byte> Digit()
 		{
 			ParserDelegate<byte> parserDelegate = (reader, includedChars) =>
 			{
@@ -124,12 +124,12 @@ namespace ParserLib
 
 				return ParseResult<byte>.Failed(position, input);
 			};
-			return new Parser<byte>(parserDelegate);
+			return new SingleParser<byte>(parserDelegate);
 		}
-		public static IParser<byte> Byte()
+		public static ISingleParser<byte> Byte()
 		{
 			
-			IParser<string> a, b, c,d,e;
+			ISingleParser<string> a, b, c,d,e;
 			
 			a = (Parse.Char('2').Then(Parse.Char('5')).Then(Parse.AnyInRange('0', '5'))).ToStringParser() ;
 			b = (Parse.Char('2').Then(Parse.AnyInRange('0', '4')).Then(Parse.AnyInRange('0', '9'))).ToStringParser();
@@ -140,17 +140,17 @@ namespace ParserLib
 			return from value in a.Or(b).Or(c).Or(d).Or(e)
 				   select Convert.ToByte(value) ;
 		}
-		public static IParser<int> Int()
+		public static ISingleParser<int> Int()
 		{
 
-			IParser<string> positive,negative;
+			ISingleParser<string> positive,negative;
 
 			negative = Parse.Char('-').Then(Parse.AnyInRange('0', '9').OneOrMoreTimes()).ToStringParser();
 			positive = Parse.AnyInRange('0', '9').OneOrMoreTimes().ToStringParser();
 			return from value in positive.Or(negative)
 				   select  Convert.ToInt32(value) ;
 		}
-		public static IParser<IPAddress> IPAddress()
+		public static ISingleParser<IPAddress> IPAddress()
 		{
 
 			return
@@ -165,7 +165,7 @@ namespace ParserLib
 				select new IPAddress(new byte[] {A,B, C, D });
 		}
 
-		public static IParser<T> Or<T>(this IParser<T> A, IParser<T> B)
+		public static ISingleParser<T> Or<T>(this ISingleParser<T> A, ISingleParser<T> B)
 		{
 			if (A == null) throw new ArgumentNullException(nameof(A));
 			if (B == null) throw new ArgumentNullException(nameof(B));
@@ -184,10 +184,30 @@ namespace ParserLib
 				else return resultB;
 
 			};
-			return new Parser<T>(parseDelegate);
+			return new SingleParser<T>(parseDelegate);
 		}
+		public static IMultipleParser<T> Or<T>(this IMultipleParser<T> A, IMultipleParser<T> B)
+		{
+			if (A == null) throw new ArgumentNullException(nameof(A));
+			if (B == null) throw new ArgumentNullException(nameof(B));
+			ParserDelegate<T> parseDelegate = (reader, includedChars) =>
+			{
+				IParseResult<T> resultA, resultB;
 
-		public static IParser<T> ReaderIncludes<T>(this IParser<T> A, params char[] IncludedChars)
+				resultA = A.TryParse(reader, includedChars);
+				if (resultA is ISucceededParseResult<T>) return resultA;
+
+
+				resultB = B.TryParse(reader, includedChars);
+				if (resultB is ISucceededParseResult<T>) return resultB;
+
+				if (resultA.Position > resultB.Position) return resultA;
+				else return resultB;
+
+			};
+			return new MultipleParser<T>(parseDelegate);
+		}
+		public static ISingleParser<T> ReaderIncludes<T>(this IParser<T> A, params char[] IncludedChars)
 		{
 			if (A == null) throw new ArgumentNullException(nameof(A));
 			ParserDelegate<T> parseDelegate = (reader, includedChars) =>
@@ -197,11 +217,11 @@ namespace ParserLib
 				result = A.TryParse(reader, includedChars.Union(IncludedChars).ToArray());
 				return result;
 			};
-			return new Parser<T>(parseDelegate);
+			return new SingleParser<T>(parseDelegate);
 		}
 
 
-		public static IParser<T> OneOrMoreTimes<T>(this IParser<T> Parser)
+		public static IMultipleParser<T> OneOrMoreTimes<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<T> parserDelegate = (reader, includedChars) =>
@@ -237,9 +257,9 @@ namespace ParserLib
 
 				return ParseResult<T>.Succeeded(position,items);
 			};
-			return new Parser<T>(parserDelegate);
+			return new MultipleParser<T>(parserDelegate);
 		}
-		public static IParser<T> ZeroOrMoreTimes<T>(this IParser<T> Parser)
+		public static IMultipleParser<T> ZeroOrMoreTimes<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<T> parserDelegate = (reader, includedChars) =>
@@ -276,11 +296,11 @@ namespace ParserLib
 
 				return ParseResult<T>.Succeeded(position,items);
 			};
-			return new Parser<T>(parserDelegate);
+			return new MultipleParser<T>(parserDelegate);
 
 		}
 
-		public static IParser<T> ZeroOrOneTime<T>(this IParser<T> Parser)
+		public static IMultipleParser<T> ZeroOrOneTime<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			ParserDelegate<T> parserDelegate = (reader, includedChars) =>
@@ -299,7 +319,7 @@ namespace ParserLib
 				}
 				
 			};
-			return new Parser<T>(parserDelegate);
+			return new MultipleParser<T>(parserDelegate);
 
 		}
 

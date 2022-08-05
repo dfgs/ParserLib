@@ -9,7 +9,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			IParser<byte> parser;
+			ISingleParser<byte> parser;
 			StringReader reader;
 
 			parser = Parse.Byte();
@@ -33,7 +33,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParse()
 		{
-			IParser<byte> parser;
+			ISingleParser<byte> parser;
 			StringReader reader;
 
 			parser = Parse.Byte();
@@ -54,7 +54,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			IParser<byte> parser;
+			ISingleParser<byte> parser;
 			StringReader reader;
 
 			reader = new StringReader("a");reader.Seek(1);

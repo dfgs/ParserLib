@@ -10,7 +10,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			IParser<IPAddress> parser;
+			ISingleParser<IPAddress> parser;
 			StringReader reader;
 
 			reader = new StringReader("192.168.0.1");
@@ -22,7 +22,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParse()
 		{
-			IParser<IPAddress> parser;
+			ISingleParser<IPAddress> parser;
 			StringReader reader;
 
 			reader = new StringReader("192.256.0.1");
@@ -35,7 +35,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			IParser<IPAddress> parser;
+			ISingleParser<IPAddress> parser;
 			StringReader reader;
 
 			reader = new StringReader("192");

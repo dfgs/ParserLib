@@ -9,7 +9,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			IParser<string> parser;
+			ISingleParser<string> parser;
 			StringReader reader;
 
 			reader = new StringReader("abc def",' ');

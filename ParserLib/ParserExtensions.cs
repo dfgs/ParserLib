@@ -10,35 +10,100 @@ namespace ParserLib
 	public static class ParserExtensions
 	{
 		#region Linq extensions
-		public static IParser<U> Select<T,U>(this IParser<T> Parser, Func<T,U> Selector)
+		public static ISingleParser<TResult> Select<T,TResult>(this ISingleParser<T> Parser, Func<T,TResult> Selector)
 		{
-			ParserDelegate<U> parserDelegate= (reader, includedChars) =>
+			ParserDelegate<TResult> parserDelegate= (reader, includedChars) =>
 			{
 				IParseResult<T> result;
 				result=Parser.TryParse(reader, includedChars);
 				switch(result)
 				{
 					case ISucceededParseResult<T> succeeded:
-						return ParseResult<U>.Succeeded(result.Position, Selector(succeeded.Value)  );
-					case IFailedParseResult<T> failed: return failed.Cast<U>();
+						return ParseResult<TResult>.Succeeded(result.Position, Selector(succeeded.Value)  );
+					case IFailedParseResult<T> failed: return failed.Cast<TResult>();
 					default: throw new NotSupportedException("Invalid result type");
 				}
 
 			};
-			return new Parser<U>(parserDelegate);
+			return new SingleParser<TResult>(parserDelegate);
 		}
-		public static IParser<V> SelectMany<T, U, V>(
-		   this IParser<T> Parser,
-		   Func<T, IParser<U>> Selector,
-		   Func<T, U, V> Projector)
+		public static ISingleParser<TResult> Select<T, TResult>(this IMultipleParser<T> Parser, Func<IEnumerable<T>, TResult> Selector)
+		{
+			ParserDelegate<TResult> parserDelegate = (reader, includedChars) =>
+			{
+				IParseResult<T> result;
+				result = Parser.TryParse(reader, includedChars);
+				switch (result)
+				{
+					case ISucceededParseResult<T> succeeded:
+						return ParseResult<TResult>.Succeeded(result.Position, Selector(succeeded.EnumerateValue()));
+					case IFailedParseResult<T> failed: return failed.Cast<TResult>();
+					default: throw new NotSupportedException("Invalid result type");
+				}
+
+			};
+			return new SingleParser<TResult>(parserDelegate);
+		}
+		
+		
+		// Single_Single
+		public static ISingleParser<TResult> SelectMany<T, U, TResult>(
+		   this ISingleParser<T> Parser,
+		   Func<T, ISingleParser<U>> Selector,
+		   Func<T, U, TResult> Projector)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
 			if (Selector == null) throw new ArgumentNullException(nameof(Selector));
 			if (Projector == null) throw new ArgumentNullException(nameof(Projector));
 
 			return Parser.Then(t => Selector(t).Select(u => Projector(t,  u  )));
-		}//*/
-		public static IParser<T> Then<T>(this IParser<T> A, IParser<T> B)
+		}
+
+		// Single_Multiple
+		public static ISingleParser<TResult> SelectMany<T, U, TResult>(
+		   this ISingleParser<T> Parser,
+		   Func<T, IMultipleParser<U>> Selector,
+		   Func<T, IEnumerable<U>, TResult> Projector)
+		{
+			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
+			if (Selector == null) throw new ArgumentNullException(nameof(Selector));
+			if (Projector == null) throw new ArgumentNullException(nameof(Projector));
+
+			return Parser.Then(t => Selector(t).Select(u => Projector(t, u)));
+		}
+
+		// Multiple_Multiple
+		public static ISingleParser<TResult> SelectMany<T, U, TResult>(
+		   this IMultipleParser<T> Parser,
+		   Func<IEnumerable<T>, IMultipleParser<U>> Selector,
+		   Func<IEnumerable<T>, IEnumerable<U>, TResult> Projector)
+		{
+			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
+			if (Selector == null) throw new ArgumentNullException(nameof(Selector));
+			if (Projector == null) throw new ArgumentNullException(nameof(Projector));
+
+			return Parser.Then(t => Selector(t).Select(u => Projector(t, u)));
+		}
+
+
+
+		// Multiple_Single
+		public static ISingleParser<TResult> SelectMany<T, U, TResult>(
+		   this IMultipleParser<T> Parser,
+		   Func<IEnumerable<T>, ISingleParser<U>> Selector,
+		   Func<IEnumerable<T>, U, TResult> Projector)
+		{
+			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
+			if (Selector == null) throw new ArgumentNullException(nameof(Selector));
+			if (Projector == null) throw new ArgumentNullException(nameof(Projector));
+
+			return Parser.Then(t => Selector(t).Select(u => Projector(t, u)));
+		}
+
+
+
+
+		public static IMultipleParser<T> Then<T>(this IParser<T> A, IParser<T> B)
 		{
 			if (A == null) throw new ArgumentNullException(nameof(A));
 			if (B == null) throw new ArgumentNullException(nameof(B));
@@ -59,83 +124,65 @@ namespace ParserLib
 
 				return ParseResult<T>.Succeeded(result1.Position, success1.EnumerateValue().Concat(success2.EnumerateValue()) );
 			};
-			return new Parser<T>(parserDelegate);
+			return new MultipleParser<T>(parserDelegate);
 		}
-		/*public static IParser<IEnumerable<T>> Then<T>(this IParser<T> A, IParser<IEnumerable<T>> B)
-		{
-			if (A == null) throw new ArgumentNullException(nameof(A));
-			if (B == null) throw new ArgumentNullException(nameof(B));
-			ParserDelegate<IEnumerable<T>> parserDelegate = (reader, includedChars) =>
-			{
-				IParseResult<T> result1;
-				IParseResult<IEnumerable<T>> result2;
-				ISucceededParseResult<T>? success1;
-				ISucceededParseResult<IEnumerable<T>>? success2;
-
-
-				result1 = A.TryParse(reader, includedChars);
-				success1 = result1 as ISucceededParseResult<T>;
-				if (success1 == null) return ((IFailedParseResult<T>)result1).Cast<IEnumerable<T>>(); 
-
-				result2 = B.TryParse(reader, includedChars);
-				success2 = result2 as ISucceededParseResult<IEnumerable<T>>;
-				if (success2 == null) return result2; 
-
-				return ParseResult<T>.Succeeded(result1.Position, success2.Value.Prepend( success1.Value).ToArray());
-			};
-			return new Parser<IEnumerable<T>>(parserDelegate);
-		}
-		public static IParser<IEnumerable<T>> Then<T>(this IParser<IEnumerable<T>> A, IParser<T> B)
-		{
-			if (A == null) throw new ArgumentNullException(nameof(A));
-			if (B == null) throw new ArgumentNullException(nameof(B));
-			ParserDelegate<IEnumerable<T>> parserDelegate = (reader, includedChars) =>
-			{
-				IParseResult<IEnumerable<T>> result1;
-				IParseResult<T> result2;
-				ISucceededParseResult<IEnumerable<T>>? success1;
-				ISucceededParseResult<T>? success2;
-
-
-				result1 = A.TryParse(reader, includedChars);
-				success1 = result1 as ISucceededParseResult<IEnumerable<T>>;
-				if (success1 == null) return result1;
-
-				result2 = B.TryParse(reader, includedChars);
-				success2 = result2 as ISucceededParseResult<T>;
-				if (success2 == null) return ((IFailedParseResult<T>)result2).Cast<IEnumerable<T>>();
-
-				return ParseResult<T>.Succeeded(result1.Position, success1.Value.Append(success2.Value).ToArray());
-			};
-			return new Parser<IEnumerable<T>>(parserDelegate);
-		}//*/
-		public static IParser<U> Then<T, U>(this IParser<T> First, Func<T, IParser<U>> Second)
+		
+		// Single_Single
+		public static ISingleParser<TResult> Then<T, TResult>(this ISingleParser<T> First, Func<T, ISingleParser<TResult>> Second)
 		{
 
 			if (First == null) throw new ArgumentNullException(nameof(First));
 			if (Second == null) throw new ArgumentNullException(nameof(Second));
 
-			ParserDelegate<U> parserDelegate = (reader, includedChars) => {
+			ParserDelegate<TResult> parserDelegate = (reader, includedChars) => {
 				IParseResult<T> result1;
-				IParseResult<U> result2;
-
+				IParseResult<TResult> result2;
+	
 				result1 = First.TryParse(reader, includedChars);
 				switch (result1)
 				{
 					case ISucceededParseResult<T> success:
 						result2 = Second(success.Value).TryParse(reader, includedChars);
-						return result2;
-					case IFailedParseResult<T> failed: return failed.Cast<U>();
+						return result2;// ParseResult<T>.Succeeded(result1.Position, success.EnumerateValue().Concat(success.EnumerateValue()));
+					case IFailedParseResult<T> failed: return failed.Cast<TResult>();
 					default: throw new NotSupportedException("Invalid result type");
 				}
 
 
 			};
-			return new Parser<U>(parserDelegate);
+			return new SingleParser<TResult>(parserDelegate);
+
+		}
+
+		// Multiple_Multiple
+		public static ISingleParser<TResult> Then<T, TResult>(this IMultipleParser<T> First, Func<IEnumerable<T>, ISingleParser<TResult>> Second)
+		{
+
+			if (First == null) throw new ArgumentNullException(nameof(First));
+			if (Second == null) throw new ArgumentNullException(nameof(Second));
+
+			ParserDelegate<TResult> parserDelegate = (reader, includedChars) => {
+				IParseResult<T> result1;
+				IParseResult<TResult> result2;
+
+				result1 = First.TryParse(reader, includedChars);
+				switch (result1)
+				{
+					case ISucceededParseResult<T> success:
+						result2 = Second(success.EnumerateValue()).TryParse(reader, includedChars);
+						return result2;// ParseResult<T>.Succeeded(result1.Position, success.EnumerateValue().Concat(success.EnumerateValue()));
+					case IFailedParseResult<T> failed: return failed.Cast<TResult>();
+					default: throw new NotSupportedException("Invalid result type");
+				}
+
+
+			};
+			return new SingleParser<TResult>(parserDelegate);
 
 		}
 		
-		public static IParser<string> ToStringParser<T>(this IParser<T> A)
+
+		public static ISingleParser<string> ToStringParser<T>(this IParser<T> A)
 		{
 			string value;
 
@@ -156,9 +203,9 @@ namespace ParserLib
 				}
 
 			};
-			return new Parser<string>(parserDelegate);
+			return new SingleParser<string>(parserDelegate);
 		}
-
+		
 		#endregion
 
 

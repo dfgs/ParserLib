@@ -11,7 +11,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParse()
 		{
-			IParser<string> parser;
+			ISingleParser<string> parser;
 			StringReader reader;
 
 			reader = new StringReader("abc");
@@ -29,13 +29,13 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldParseWithEnumeration()
 		{
-			IParser<byte> parser;
+			IMultipleParser<byte> parser;
 			StringReader reader;
 			byte[] result;
 
 			reader = new StringReader("1234");
 			parser = Parse.Digit().OneOrMoreTimes();
-			result = parser.ParseAll(reader).ToArray();
+			result = parser.Parse(reader).ToArray();
 
 			Assert.AreEqual(4, result.Length);
 			Assert.AreEqual(1, result[0]);
@@ -52,7 +52,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParse()
 		{
-			IParser<string> parser;
+			ISingleParser<string> parser;
 			StringReader reader;
 
 			reader = new StringReader("abd");
@@ -65,7 +65,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWithEnumeration()
 		{
-			IParser<byte> parser;
+			IMultipleParser<byte> parser;
 			StringReader reader;
 
 			reader = new StringReader("a1234");
@@ -77,7 +77,7 @@ namespace ParserLib.UnitTest
 		[TestMethod]
 		public void ShouldNotParseWhenEOF()
 		{
-			IParser<string> parser;
+			ISingleParser<string> parser;
 			StringReader reader;
 
 			reader = new StringReader("ab"); 
