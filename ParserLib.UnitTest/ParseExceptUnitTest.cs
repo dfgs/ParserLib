@@ -50,7 +50,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult<char> result;
+			IParseResult result;
 
 			reader = new StringReader("dbc");
 			parser = Parse.Except('c', 'b', 'a');
@@ -65,7 +65,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult<char> result;
+			IParseResult result;
 
 			reader = new StringReader("abc");
 			parser = Parse.Except('c', 'b', 'a');
@@ -80,7 +80,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult<char> result;
+			IParseResult result;
 
 			reader = new StringReader("a"); reader.Seek(1);
 			parser = Parse.Except('c', 'b', 'a');

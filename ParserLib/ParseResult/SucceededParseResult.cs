@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public abstract class SucceededParseResult<T>:ParseResult<T>, ISucceededParseResult<T>
+	public abstract class SucceededParseResult<T>:ParseResult, ISucceededParseResult<T>
 	{
 		public abstract T Value { get; }
 

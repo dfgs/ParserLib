@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public abstract class ParseResult<T> : IParseResult<T>
+	public abstract class ParseResult : IParseResult
 	{
 		/*public abstract bool IsSuccess
 		{
@@ -24,21 +24,21 @@ namespace ParserLib
 		{
 			this.position = Position;
 		}
-		public static SingleSucceededParseResult<T> Succeeded(long Position, T Value)
+		public static SingleSucceededParseResult<T> Succeeded<T>(long Position, T Value)
 		{
 			return new SingleSucceededParseResult<T>(Position, Value);
 		}
-		public static MultipleSucceededParseResult<T> Succeeded(long Position, IEnumerable<T> Value)
+		public static MultipleSucceededParseResult<T> Succeeded<T>(long Position, IEnumerable<T> Value)
 		{
 			return new MultipleSucceededParseResult<T>(Position, Value);
 		}
-		public static UnexpectedCharParseResult<T> Failed(long Position, char Input)
+		public static UnexpectedCharParseResult Failed(long Position, char Input)
 		{
-			return new UnexpectedCharParseResult<T>(Position,Input);
+			return new UnexpectedCharParseResult(Position,Input);
 		}
-		public static EndOfReaderParseResult<T> EndOfReader(long Position)
+		public static EndOfReaderParseResult EndOfReader(long Position)
 		{
-			return new EndOfReaderParseResult<T>(Position);
+			return new EndOfReaderParseResult(Position);
 		}
 
 	}

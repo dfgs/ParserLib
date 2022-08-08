@@ -18,14 +18,14 @@ namespace ParserLib
 		}
 
 		
-		public IParseResult<T> TryParse(string Value, params char[] IgnoredChars)
+		public IParseResult TryParse(string Value, params char[] IgnoredChars)
 		{
 			if (Value == null) throw new ArgumentNullException(nameof(Value));
 			return TryParse(new StringReader(Value,IgnoredChars));
 		}
-		public IParseResult<T> TryParse(IReader Reader, params char[] IncludedChars)
+		public IParseResult TryParse(IReader Reader, params char[] IncludedChars)
 		{
-			IParseResult<T> result;
+			IParseResult result;
 			long position;
 
 			if (Reader == null) throw new ArgumentNullException(nameof(Reader));

@@ -14,14 +14,13 @@ namespace ParserLib
 		{
 			ParserDelegate<TResult> parserDelegate= (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult result;
 				result=Parser.TryParse(reader, includedChars);
 				switch(result)
 				{
 					case ISucceededParseResult<T> succeeded:
-						return ParseResult<TResult>.Succeeded(result.Position, Selector(succeeded.Value)  );
-					case IFailedParseResult<T> failed: return failed.Cast<TResult>();
-					default: throw new NotSupportedException("Invalid result type");
+						return ParseResult.Succeeded(result.Position, Selector(succeeded.Value)  );
+					default: return result;
 				}
 
 			};
@@ -31,14 +30,13 @@ namespace ParserLib
 		{
 			ParserDelegate<TResult> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result;
+				IParseResult result;
 				result = Parser.TryParse(reader, includedChars);
 				switch (result)
 				{
 					case ISucceededParseResult<T> succeeded:
-						return ParseResult<TResult>.Succeeded(result.Position, Selector(succeeded.EnumerateValue()));
-					case IFailedParseResult<T> failed: return failed.Cast<TResult>();
-					default: throw new NotSupportedException("Invalid result type");
+						return ParseResult.Succeeded(result.Position, Selector(succeeded.EnumerateValue()));
+					default: return result;
 				}
 
 			};
@@ -109,8 +107,8 @@ namespace ParserLib
 			if (B == null) throw new ArgumentNullException(nameof(B));
 			ParserDelegate<T> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> result1;
-				IParseResult<T> result2;
+				IParseResult result1;
+				IParseResult result2;
 				ISucceededParseResult<T>? success1, success2;
 
 
@@ -122,7 +120,7 @@ namespace ParserLib
 				success2 = result2 as ISucceededParseResult<T>;
 				if (success2 == null) return result2;
 
-				return ParseResult<T>.Succeeded(result1.Position, success1.EnumerateValue().Concat(success2.EnumerateValue()) );
+				return ParseResult.Succeeded(result1.Position, success1.EnumerateValue().Concat(success2.EnumerateValue()) );
 			};
 			return new MultipleParser<T>(parserDelegate);
 		}
@@ -135,17 +133,16 @@ namespace ParserLib
 			if (Second == null) throw new ArgumentNullException(nameof(Second));
 
 			ParserDelegate<TResult> parserDelegate = (reader, includedChars) => {
-				IParseResult<T> result1;
-				IParseResult<TResult> result2;
+				IParseResult result1;
+				IParseResult result2;
 	
 				result1 = First.TryParse(reader, includedChars);
 				switch (result1)
 				{
 					case ISucceededParseResult<T> success:
 						result2 = Second(success.Value).TryParse(reader, includedChars);
-						return result2;// ParseResult<T>.Succeeded(result1.Position, success.EnumerateValue().Concat(success.EnumerateValue()));
-					case IFailedParseResult<T> failed: return failed.Cast<TResult>();
-					default: throw new NotSupportedException("Invalid result type");
+						return result2;// ParseResult.Succeeded(result1.Position, success.EnumerateValue().Concat(success.EnumerateValue()));
+					default: return result1;
 				}
 
 
@@ -162,17 +159,16 @@ namespace ParserLib
 			if (Second == null) throw new ArgumentNullException(nameof(Second));
 
 			ParserDelegate<TResult> parserDelegate = (reader, includedChars) => {
-				IParseResult<T> result1;
-				IParseResult<TResult> result2;
+				IParseResult result1;
+				IParseResult result2;
 
 				result1 = First.TryParse(reader, includedChars);
 				switch (result1)
 				{
 					case ISucceededParseResult<T> success:
 						result2 = Second(success.EnumerateValue()).TryParse(reader, includedChars);
-						return result2;// ParseResult<T>.Succeeded(result1.Position, success.EnumerateValue().Concat(success.EnumerateValue()));
-					case IFailedParseResult<T> failed: return failed.Cast<TResult>();
-					default: throw new NotSupportedException("Invalid result type");
+						return result2;// ParseResult.Succeeded(result1.Position, success.EnumerateValue().Concat(success.EnumerateValue()));
+					default: return result1;
 				}
 
 
@@ -190,16 +186,15 @@ namespace ParserLib
 
 			ParserDelegate<string> parserDelegate = (reader, includedChars) =>
 			{
-				IParseResult<T> resultA;
+				IParseResult resultA;
 
 				resultA = A.TryParse(reader, includedChars);
 				switch (resultA)
 				{
 					case ISucceededParseResult<T> success:
 						value = string.Concat(success.EnumerateValue());
-						return ParseResult<string>.Succeeded(resultA.Position,value);
-					case IFailedParseResult<T> failed: return failed.Cast<string>();
-					default: throw new NotSupportedException("Invalid result type");
+						return ParseResult.Succeeded(resultA.Position,value);
+					default: return resultA;
 				}
 
 			};

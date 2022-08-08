@@ -50,7 +50,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult<char> result;
+			IParseResult result;
 
 			reader = new StringReader("abc");
 			parser = Parse.Any();
@@ -68,7 +68,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult<char> result;
+			IParseResult result;
 
 			reader = new StringReader("a"); reader.Seek(1);
 			parser = Parse.Any();

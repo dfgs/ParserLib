@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public interface IUnexpectedCharParseResult<T> : IFailedParseResult<T>
+	public interface IUnexpectedCharParseResult : IFailedParseResult
 	{
 		char Input
 		{

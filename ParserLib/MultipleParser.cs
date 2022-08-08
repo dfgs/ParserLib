@@ -24,7 +24,7 @@ namespace ParserLib
 		}
 		public IEnumerable<T> Parse(IReader Reader, params char[] IncludedChars)
 		{
-			IParseResult<T> result;
+			IParseResult result;
 			long position;
 
 			if (Reader == null) throw new ArgumentNullException(nameof(Reader));
@@ -35,7 +35,7 @@ namespace ParserLib
 			if (result is ISucceededParseResult<T> success) return success.EnumerateValue();
 
 			Reader.Seek(position);
-			throw ((IFailedParseResult<T>)result).Exception;
+			throw ((IFailedParseResult)result).Exception;
 		}
 
 		

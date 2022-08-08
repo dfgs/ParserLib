@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParserLib
 {
-	public class UnexpectedCharParseResult<T> : FailedParseResult<T>, IUnexpectedCharParseResult<T>
+	public class UnexpectedCharParseResult : FailedParseResult, IUnexpectedCharParseResult
 	{
 		
 
@@ -29,10 +29,7 @@ namespace ParserLib
 			this.exception = new UnexpectedCharException(Input,Position);
 		}
 
-		public override IFailedParseResult<U> Cast<U>()
-		{
-			return new UnexpectedCharParseResult<U>(Position,Input);
-		}
+		
 
 
 

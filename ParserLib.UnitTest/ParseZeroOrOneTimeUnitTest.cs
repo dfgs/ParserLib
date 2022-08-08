@@ -13,7 +13,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult<char> result;
+			IParseResult result;
 
 			reader = new StringReader("a");
 			parser = Parse.Char('a').ZeroOrOneTime();
@@ -28,7 +28,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<char> parser;
 			StringReader reader;
-			IParseResult<char> result;
+			IParseResult result;
 
 			reader = new StringReader("d");
 			parser = Parse.Char('a').ZeroOrOneTime();
@@ -43,7 +43,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult<string> result;
+			IParseResult result;
 
 			reader = new StringReader("adc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime().ToStringParser();
@@ -73,7 +73,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult<string> result;
+			IParseResult result;
 
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime().ToStringParser();
 
@@ -96,7 +96,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult<string> result;
+			IParseResult result;
 
 			reader = new StringReader("adc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime().ToStringParser();
@@ -128,7 +128,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult<string> result;
+			IParseResult result;
 
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime().ToStringParser();
 
@@ -153,7 +153,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult<string> result;
+			IParseResult result;
 
 			reader = new StringReader("dbc");
 			parser = Parse.Char('a').ZeroOrOneTime().ToStringParser();
@@ -183,7 +183,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult<string> result;
+			IParseResult result;
 
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime().ToStringParser();
 
@@ -206,7 +206,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult<string> result;
+			IParseResult result;
 
 			reader = new StringReader("adc");
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime().ToStringParser();
@@ -238,7 +238,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<string> parser;
 			StringReader reader;
-			IParseResult<string> result;
+			IParseResult result;
 
 			parser = Parse.Char('a').Then(Parse.Char('b')).Then(Parse.Char('c')).ZeroOrOneTime().ToStringParser();
 

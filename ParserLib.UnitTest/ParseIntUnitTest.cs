@@ -55,7 +55,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<int> parser;
 			StringReader reader;
-			IParseResult<int> result;
+			IParseResult result;
 
 			parser = Parse.Int();
 
@@ -92,7 +92,7 @@ namespace ParserLib.UnitTest
 		{
 			IParser<int> parser;
 			StringReader reader;
-			IParseResult<int> result;
+			IParseResult result;
 
 			parser = Parse.Int();
 
