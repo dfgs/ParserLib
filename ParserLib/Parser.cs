@@ -9,11 +9,17 @@ namespace ParserLib
  
     public abstract class Parser<T>:IParser<T>
     {
+		public string Description
+		{
+			get;
+			private set;
+		}
 
 		protected ParserDelegate<T> parserDelegate;
 
-		public Parser(ParserDelegate<T> ParserDelegate)
+		public Parser(string Description,ParserDelegate<T> ParserDelegate)
 		{
+			this.Description = Description;
 			this.parserDelegate = ParserDelegate;
 		}
 
@@ -35,6 +41,11 @@ namespace ParserLib
 			if (!(result is ISucceededParseResult<T>)) Reader.Seek(position);
 
 			return result;
+		}
+
+		public override string ToString()
+		{
+			return Description;
 		}
 
 

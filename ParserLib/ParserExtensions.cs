@@ -24,7 +24,7 @@ namespace ParserLib
 				}
 
 			};
-			return new SingleParser<TResult>(parserDelegate);
+			return new SingleParser<TResult>($"{Parser.Description}%", parserDelegate);
 		}
 		public static ISingleParser<TResult> Select<T, TResult>(this IMultipleParser<T> Parser, Func<IEnumerable<T>, TResult> Selector)
 		{
@@ -40,7 +40,7 @@ namespace ParserLib
 				}
 
 			};
-			return new SingleParser<TResult>(parserDelegate);
+			return new SingleParser<TResult>($"{Parser.Description}%",parserDelegate);
 		}
 		
 		
@@ -122,7 +122,7 @@ namespace ParserLib
 
 				return ParseResult.Succeeded(result1.Position, success1.EnumerateValue().Concat(success2.EnumerateValue()) );
 			};
-			return new MultipleParser<T>(parserDelegate);
+			return new MultipleParser<T>($"{A.Description}{B.Description}",parserDelegate);
 		}
 		
 		// Single_Single
@@ -147,7 +147,7 @@ namespace ParserLib
 
 
 			};
-			return new SingleParser<TResult>(parserDelegate);
+			return new SingleParser<TResult>($"{First.Description}%",parserDelegate);
 
 		}
 
@@ -173,7 +173,7 @@ namespace ParserLib
 
 
 			};
-			return new SingleParser<TResult>(parserDelegate);
+			return new SingleParser<TResult>($"{First.Description}%",parserDelegate);
 
 		}
 		
@@ -198,7 +198,7 @@ namespace ParserLib
 				}
 
 			};
-			return new SingleParser<string>(parserDelegate);
+			return new SingleParser<string>(A.Description,parserDelegate);
 		}
 		
 		#endregion

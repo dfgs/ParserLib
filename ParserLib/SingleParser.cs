@@ -11,7 +11,7 @@ namespace ParserLib
     {
 
 
-		public SingleParser(ParserDelegate<T> ParserDelegate):base(ParserDelegate)
+		public SingleParser(string Description, ParserDelegate<T> ParserDelegate):base(Description,ParserDelegate)
 		{
 		}
 

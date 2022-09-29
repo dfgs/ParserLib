@@ -11,7 +11,7 @@ namespace ParserLib
     {
 
 
-		public MultipleParser(ParserDelegate<T> ParserDelegate):base(ParserDelegate)
+		public MultipleParser(string Description,ParserDelegate<T> ParserDelegate):base(Description,ParserDelegate)
 		{
 		}
 

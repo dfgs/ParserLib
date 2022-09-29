@@ -10,7 +10,10 @@ namespace ParserLib
 
 	public interface IParser<out T>
 	{
-
+		string Description
+		{
+			get;
+		}
 		IParseResult TryParse(string Value, params char[] IgnoredChars);
 
 		IParseResult TryParse(IReader Reader, params char[] IncludedChars);
