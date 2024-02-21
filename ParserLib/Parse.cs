@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -273,6 +274,50 @@ namespace ParserLib
 			};
 			return new MultipleParser<T>($"{Parser.Description}+", parserDelegate);
 		}
+
+		public static IMultipleParser<T> List<T, SeparatorT>(this ISingleParser<T> Parser, ISingleParser<SeparatorT> Separator)
+		{
+			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
+			ParserDelegate<T> parserDelegate = (reader, includedChars) =>
+			{
+				IParseResult result;
+				List<T> items;
+				long position;
+
+				items = new List<T>();
+
+				position = reader.Position;
+				result = Parser.TryParse(reader, includedChars);
+				switch (result)
+				{
+					case ISucceededParseResult<T> success:
+						items.AddRange(success.EnumerateValue());
+						break;
+					default: return result;
+				}
+
+				ISingleParser<T> nextParser = from sep in Separator
+											  from nextItem in Parser
+											  select nextItem;
+
+				while (!reader.EOF)
+				{
+					result = nextParser.TryParse(reader, includedChars);
+					switch (result)
+					{
+						case ISucceededParseResult<T> success:
+							items.AddRange(success.EnumerateValue());
+							break;
+						default:
+							return ParseResult.Succeeded<T>(position, items);
+					}
+				}
+
+				return ParseResult.Succeeded<T>(position, items);
+			};
+			return new MultipleParser<T>($"{Parser.Description}+", parserDelegate);
+		}
+
 		public static IMultipleParser<T> ZeroOrMoreTimes<T>(this IParser<T> Parser)
 		{
 			if (Parser == null) throw new ArgumentNullException(nameof(Parser));
